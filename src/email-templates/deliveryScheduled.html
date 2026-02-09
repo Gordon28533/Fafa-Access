@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Delivery Scheduled</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      color: #1f2937;
+      line-height: 1.6;
+      background-color: #f3f4f6;
+    }
+    .wrapper { background-color: #f3f4f6; padding: 20px; }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .header p {
+      font-size: 14px;
+      opacity: 0.95;
+      font-weight: 400;
+    }
+    .content {
+      padding: 40px 30px;
+    }
+    .greeting {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: #374151;
+    }
+    .intro-text {
+      font-size: 15px;
+      color: #6b7280;
+      margin-bottom: 25px;
+      line-height: 1.7;
+    }
+    .delivery-details {
+      background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+      border-left: 4px solid #3b82f6;
+      padding: 25px;
+      margin: 25px 0;
+      border-radius: 4px;
+    }
+    .detail-row {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      font-size: 14px;
+    }
+    .detail-row:last-child {
+      margin-bottom: 0;
+    }
+    .detail-icon {
+      font-size: 20px;
+      margin-right: 12px;
+      width: 24px;
+      text-align: center;
+    }
+    .detail-content {
+      flex: 1;
+    }
+    .detail-label {
+      font-weight: 600;
+      color: #1e40af;
+      display: block;
+      margin-bottom: 2px;
+    }
+    .detail-value {
+      color: #1f2937;
+      font-size: 15px;
+    }
+    .section {
+      margin: 25px 0;
+    }
+    .section h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+    }
+    .section p {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+    .checklist {
+      background: #f9fafb;
+      padding: 20px;
+      border-radius: 6px;
+      margin: 15px 0;
+    }
+    .checklist-item {
+      display: flex;
+      align-items: center;
+      margin-bottom: 12px;
+      font-size: 14px;
+      color: #6b7280;
+    }
+    .checklist-item:last-child {
+      margin-bottom: 0;
+    }
+    .checklist-check {
+      width: 20px;
+      height: 20px;
+      background: #3b82f6;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      margin-right: 10px;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    .warning-box {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+    .warning-box h3 {
+      color: #92400e;
+      margin: 0 0 8px 0;
+      font-size: 14px;
+    }
+    .warning-box p {
+      color: #78350f;
+      font-size: 13px;
+      margin: 0;
+    }
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+      color: white;
+      padding: 12px 32px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      margin: 20px 0;
+      text-align: center;
+      transition: opacity 0.3s ease;
+    }
+    .cta-button:hover {
+      opacity: 0.9;
+    }
+    .divider {
+      height: 1px;
+      background-color: #e5e7eb;
+      margin: 30px 0;
+    }
+    .footer {
+      background-color: #f9fafb;
+      padding: 30px;
+      text-align: center;
+      border-top: 1px solid #e5e7eb;
+    }
+    .footer-text {
+      font-size: 12px;
+      color: #9ca3af;
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+    .footer-links {
+      font-size: 12px;
+      margin-top: 15px;
+    }
+    .footer-links a {
+      color: #3b82f6;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 600px) {
+      .wrapper { padding: 0; }
+      .container { border-radius: 0; }
+      .header { padding: 30px 20px; }
+      .header h1 { font-size: 24px; }
+      .content { padding: 30px 20px; }
+      .footer { padding: 20px; }
+      .detail-row { flex-direction: column; }
+      .detail-icon { margin-bottom: 5px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>📦 Delivery Scheduled</h1>
+        <p>Your laptop delivery is confirmed and ready</p>
+      </div>
+
+      <!-- Content -->
+      <div class="content">
+        <p class="greeting">Dear {{name}},</p>
+        
+        <p class="intro-text">
+          Great news! Your laptop delivery has been scheduled. Please see the important details below.
+        </p>
+
+        <!-- Delivery Details -->
+        <div class="delivery-details">
+          <div class="detail-row">
+            <div class="detail-icon">📅</div>
+            <div class="detail-content">
+              <span class="detail-label">Delivery Date</span>
+              <span class="detail-value">{{deliveryDate}}</span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-icon">⏰</div>
+            <div class="detail-content">
+              <span class="detail-label">Time Window</span>
+              <span class="detail-value">{{deliveryTimeWindow}}</span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-icon">👤</div>
+            <div class="detail-content">
+              <span class="detail-label">Delivery Agent</span>
+              <span class="detail-value">{{agentName}}</span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-icon">📍</div>
+            <div class="detail-content">
+              <span class="detail-label">Delivery Location</span>
+              <span class="detail-value">{{location}}</span>
+            </div>
+          </div>
+          <div class="detail-row">
+            <div class="detail-icon">☎️</div>
+            <div class="detail-content">
+              <span class="detail-label">Agent Contact Number</span>
+              <span class="detail-value">{{agentPhone}}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Important Instructions -->
+        <div class="section">
+          <h3>⚠️ Important Instructions</h3>
+          <p>Please read and follow these instructions carefully:</p>
+          
+          <div class="checklist">
+            <div class="checklist-item">
+              <div class="checklist-check">✓</div>
+              <div><strong>Be Present:</strong> You must be personally present to receive the laptop</div>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-check">✓</div>
+              <div><strong>Arrive Early:</strong> Be available 15 minutes before the scheduled time</div>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-check">✓</div>
+              <div><strong>Prepare Payment:</strong> Have the required payment amount ready in cash or mobile money</div>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-check">✓</div>
+              <div><strong>Inspect Laptop:</strong> Check the laptop thoroughly before signing</div>
+            </div>
+            <div class="checklist-item">
+              <div class="checklist-check">✓</div>
+              <div><strong>Keep Receipt:</strong> Retain all delivery and payment receipts</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Cancellation/Rescheduling -->
+        <div class="warning-box">
+          <h3>Need to Reschedule?</h3>
+          <p>If you cannot make this appointment, contact us at least 24 hours before your scheduled delivery. Late cancellations may affect future eligibility.</p>
+        </div>
+
+        <!-- Preparation Section -->
+        <div class="section">
+          <h3>How to Prepare</h3>
+          <p><strong>Before Delivery:</strong></p>
+          <ul style="margin-left: 20px; color: #6b7280; font-size: 14px;">
+            <li>Clear a space for delivery and laptop inspection</li>
+            <li>Ensure you have a valid ID for verification</li>
+            <li>Have the exact payment amount ready</li>
+            <li>Note down your agent's contact number</li>
+          </ul>
+        </div>
+
+        <!-- Action Section -->
+        <div class="section">
+          <h3>Questions?</h3>
+          <p>If you have any questions about your delivery, you can:</p>
+          <ul style="margin-left: 20px; color: #6b7280; font-size: 14px;">
+            <li>Contact the delivery agent at {{agentPhone}}</li>
+            <li>Visit your dashboard for more details</li>
+            <li>Reach out to our support team</li>
+          </ul>
+          <a href="{{dashboardUrl}}" class="cta-button">View Delivery Details</a>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Confirmation -->
+        <div class="section">
+          <p style="font-size: 13px; color: #9ca3af; text-align: center;">
+            Your Application Reference: <strong>{{applicationRef}}</strong>
+          </p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p class="footer-text">
+          <strong>Fafa Access - Student Laptop Distribution Program</strong>
+        </p>
+        <p class="footer-text">
+          We look forward to delivering your laptop!
+        </p>
+        <div class="footer-links">
+          <a href="https://fafaaccess.edu.gh/delivery-guide">Delivery Guide</a>
+          <a href="https://fafaaccess.edu.gh/contact">Contact</a>
+          <a href="https://fafaaccess.edu.gh/faq">FAQ</a>
+        </div>
+        <p class="footer-text">
+          © 2026 Fafa Access. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

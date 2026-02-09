@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Required</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      color: #1f2937;
+      line-height: 1.6;
+      background-color: #f3f4f6;
+    }
+    .wrapper { background-color: #f3f4f6; padding: 20px; }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .header p {
+      font-size: 14px;
+      opacity: 0.95;
+      font-weight: 400;
+    }
+    .content {
+      padding: 40px 30px;
+    }
+    .greeting {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: #374151;
+    }
+    .intro-text {
+      font-size: 15px;
+      color: #6b7280;
+      margin-bottom: 25px;
+      line-height: 1.7;
+    }
+    .amount-box {
+      background: linear-gradient(135deg, #fffbeb 0%, #fef3c7 100%);
+      border: 2px solid #f59e0b;
+      padding: 30px;
+      margin: 25px 0;
+      border-radius: 8px;
+      text-align: center;
+    }
+    .amount-label {
+      display: block;
+      font-size: 14px;
+      color: #92400e;
+      margin-bottom: 10px;
+      font-weight: 600;
+    }
+    .amount-value {
+      display: block;
+      font-size: 42px;
+      font-weight: 700;
+      color: #f59e0b;
+      margin-bottom: 10px;
+    }
+    .amount-due-date {
+      display: block;
+      font-size: 13px;
+      color: #b45309;
+    }
+    .section {
+      margin: 25px 0;
+    }
+    .section h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 12px;
+    }
+    .section p {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+    .payment-methods {
+      background: #f9fafb;
+      padding: 20px;
+      border-radius: 6px;
+      margin: 15px 0;
+    }
+    .payment-method {
+      display: flex;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #e5e7eb;
+      font-size: 14px;
+    }
+    .payment-method:last-child {
+      border-bottom: none;
+    }
+    .payment-icon {
+      font-size: 20px;
+      margin-right: 12px;
+      width: 30px;
+    }
+    .payment-name {
+      flex: 1;
+    }
+    .payment-status {
+      background: #dcfce7;
+      color: #166534;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    .payment-details {
+      background: #e0f2fe;
+      border-left: 4px solid #0284c7;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+    .detail-item {
+      margin: 10px 0;
+      font-size: 14px;
+      color: #075985;
+    }
+    .detail-item strong {
+      color: #0c4a6e;
+    }
+    .timeline {
+      background: #f0fdf4;
+      border-left: 4px solid #10b981;
+      padding: 20px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .timeline-item {
+      display: flex;
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    .timeline-item:last-child {
+      margin-bottom: 0;
+    }
+    .timeline-number {
+      background: #10b981;
+      color: white;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+    .timeline-text {
+      color: #166534;
+    }
+    .timeline-text strong {
+      color: #047857;
+    }
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+      color: white;
+      padding: 12px 32px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      margin: 20px 0;
+      text-align: center;
+      transition: opacity 0.3s ease;
+    }
+    .cta-button:hover {
+      opacity: 0.9;
+    }
+    .important-box {
+      background: #fee2e2;
+      border-left: 4px solid #ef4444;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+    .important-box h3 {
+      color: #991b1b;
+      margin: 0 0 8px 0;
+      font-size: 14px;
+    }
+    .important-box p {
+      color: #7f1d1d;
+      font-size: 14px;
+      margin: 0;
+      line-height: 1.6;
+    }
+    .divider {
+      height: 1px;
+      background-color: #e5e7eb;
+      margin: 30px 0;
+    }
+    .footer {
+      background-color: #f9fafb;
+      padding: 30px;
+      text-align: center;
+      border-top: 1px solid #e5e7eb;
+    }
+    .footer-text {
+      font-size: 12px;
+      color: #9ca3af;
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+    .footer-links {
+      font-size: 12px;
+      margin-top: 15px;
+    }
+    .footer-links a {
+      color: #f59e0b;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 600px) {
+      .wrapper { padding: 0; }
+      .container { border-radius: 0; }
+      .header { padding: 30px 20px; }
+      .header h1 { font-size: 24px; }
+      .content { padding: 30px 20px; }
+      .footer { padding: 20px; }
+      .amount-box { padding: 25px 20px; }
+      .amount-value { font-size: 36px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>💳 Payment Required</h1>
+        <p>Final step before your laptop delivery</p>
+      </div>
+
+      <!-- Content -->
+      <div class="content">
+        <p class="greeting">Dear {{name}},</p>
+        
+        <p class="intro-text">
+          Your laptop has been delivered successfully! To complete the process, payment is required for the outstanding balance.
+        </p>
+
+        <!-- Amount Box -->
+        <div class="amount-box">
+          <span class="amount-label">Amount Due</span>
+          <span class="amount-value">{{amount}}</span>
+          <span class="amount-due-date">Due by: {{paymentDueDate}}</span>
+        </div>
+
+        <!-- Payment Details -->
+        <div class="payment-details">
+          <div class="detail-item">
+            <strong>Application Reference:</strong> {{applicationRef}}
+          </div>
+          <div class="detail-item">
+            <strong>Payment Type:</strong> Final Payment
+          </div>
+          <div class="detail-item">
+            <strong>Due Date:</strong> {{paymentDueDate}}
+          </div>
+        </div>
+
+        <!-- Payment Methods Section -->
+        <div class="section">
+          <h3>Payment Methods</h3>
+          <p>You can make payment using any of the following methods:</p>
+          
+          <div class="payment-methods">
+            <div class="payment-method">
+              <div class="payment-icon">💵</div>
+              <div class="payment-name">
+                <strong>Cash Payment</strong><br>
+                <span style="color: #6b7280; font-size: 13px;">Pay directly to our office in person</span>
+              </div>
+              <div class="payment-status">Accepted</div>
+            </div>
+            <div class="payment-method">
+              <div class="payment-icon">📱</div>
+              <div class="payment-name">
+                <strong>Mobile Money</strong><br>
+                <span style="color: #6b7280; font-size: 13px;">Pay via MTN Mobile Money or Vodafone Cash</span>
+              </div>
+              <div class="payment-status">Accepted</div>
+            </div>
+            <div class="payment-method">
+              <div class="payment-icon">🏦</div>
+              <div class="payment-name">
+                <strong>Bank Transfer</strong><br>
+                <span style="color: #6b7280; font-size: 13px;">Direct bank account transfer</span>
+              </div>
+              <div class="payment-status">Accepted</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Timeline Section -->
+        <div class="section">
+          <h3>Payment Timeline</h3>
+          <div class="timeline">
+            <div class="timeline-item">
+              <div class="timeline-number">1</div>
+              <div class="timeline-text">
+                <strong>Make Payment</strong><br>
+                <span style="color: #6b7280;">Pay the amount due using any accepted method</span>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-number">2</div>
+              <div class="timeline-text">
+                <strong>Get Receipt</strong><br>
+                <span style="color: #6b7280;">Keep your payment receipt as proof</span>
+              </div>
+            </div>
+            <div class="timeline-item">
+              <div class="timeline-number">3</div>
+              <div class="timeline-text">
+                <strong>Confirm Payment</strong><br>
+                <span style="color: #6b7280;">Update your account with payment confirmation</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Important Notes -->
+        <div class="important-box">
+          <h3>Important</h3>
+          <p>
+            Payment must be made by {{paymentDueDate}}. Late or unpaid amounts may result in penalties or impact future eligibility. Please keep all payment receipts for your records.
+          </p>
+        </div>
+
+        <!-- Help Section -->
+        <div class="section">
+          <h3>Need Help?</h3>
+          <p>If you have difficulty making payment or have questions about payment options, contact our support team immediately:</p>
+          <ul style="margin-left: 20px; color: #6b7280; font-size: 14px;">
+            <li>📧 Email: support@fafaaccess.edu.gh</li>
+            <li>📱 Phone: Contact the delivery agent who delivered your laptop</li>
+            <li>🌐 Visit our office during business hours</li>
+          </ul>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Confirmation -->
+        <div class="section">
+          <p style="font-size: 13px; color: #9ca3af; text-align: center;">
+            Thank you for using Fafa Access!
+          </p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p class="footer-text">
+          <strong>Fafa Access - Student Laptop Distribution Program</strong>
+        </p>
+        <p class="footer-text">
+          Complete your payment to finalize your laptop ownership.
+        </p>
+        <div class="footer-links">
+          <a href="https://fafaaccess.edu.gh/payment">Payment Guide</a>
+          <a href="https://fafaaccess.edu.gh/contact">Contact Support</a>
+          <a href="https://fafaaccess.edu.gh/faq">FAQ</a>
+        </div>
+        <p class="footer-text">
+          © 2026 Fafa Access. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

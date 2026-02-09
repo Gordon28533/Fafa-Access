@@ -1,0 +1,294 @@
+# DNS Records Configuration for Fafa Access
+# Use with Cloudflare, Route53, Azure DNS, or any DNS provider
+# Records ensure proper domain routing, email delivery, and security
+
+## Primary Domain Records
+# Replace the following placeholders:
+# - YOUR_SERVER_IP: Your production server IP (e.g., 20.188.45.123)
+# - YOUR_EMAIL_PROVIDER: Your email service provider
+# - YOUR_CLOUDFLARE_ZONE: Your Cloudflare zone (if applicable)
+
+---
+
+# A Records (IPv4)
+# Purpose: Route domain requests to your server
+
+@ A YOUR_SERVER_IP
+# Example: 20.188.45.123
+# This is your main server IP
+
+www A YOUR_SERVER_IP
+# www subdomain points to same server
+
+# If using separate API subdomain:
+api A YOUR_API_SERVER_IP
+# Or CNAME to your load balancer
+
+---
+
+# AAAA Records (IPv6) - Optional
+# Purpose: IPv6 support for modern browsers
+
+@ AAAA YOUR_IPV6_ADDRESS
+# Example: 2001:0db8:85a3::8a2e:0370:7334
+
+www AAAA YOUR_IPV6_ADDRESS
+
+---
+
+# CNAME Records (Canonical Names)
+# Purpose: Alias for CDN or load balancers
+
+# If using AWS CloudFront:
+# cdn CNAME d1234567890.cloudfront.net
+
+# If using Cloudflare (optional, use CNAME if not changing nameservers):
+# @ CNAME fafaaccess.com.cdn.cloudflare.net
+
+# If using Azure CDN:
+# cdn CNAME fafaaccess.azureedge.net
+
+---
+
+# MX Records (Mail Exchange)
+# Purpose: Route email to your email provider
+# Priority: Lower number = higher priority
+
+# For Gmail/Google Workspace:
+@ MX 5 gmail-smtp-in.l.google.com
+@ MX 10 alt1.gmail-smtp-in.l.google.com
+@ MX 20 alt2.gmail-smtp-in.l.google.com
+
+# For SendGrid (optional):
+# mail MX 10 sendgrid.net
+
+# For Microsoft 365 (if using):
+# @ MX 10 fafaaccess.mail.protection.outlook.com
+
+---
+
+# TXT Records (Text Records)
+# Purpose: Email authentication, domain verification, SSL
+
+# SPF (Sender Policy Framework) - Prevent email spoofing
+@ TXT "v=spf1 include:_spf.google.com ~all"
+# For SendGrid:
+# @ TXT "v=spf1 include:sendgrid.net ~all"
+
+# DKIM (DomainKeys Identified Mail) - Email signing
+# Add records from your email provider
+# Example format:
+# default._domainkey TXT "v=DKIM1; k=rsa; p=YOUR_PUBLIC_KEY"
+
+# DMARC (Domain-based Message Authentication)
+# Tells receivers how to handle authentication failures
+_dmarc TXT "v=DMARC1; p=quarantine; rua=mailto:admin@fafaaccess.com; ruf=mailto:admin@fafaaccess.com; fo=1"
+
+# Alternative (stricter):
+# _dmarc TXT "v=DMARC1; p=reject; rua=mailto:admin@fafaaccess.com; ruf=mailto:admin@fafaaccess.com; fo=1"
+
+# Domain Verification (if using third-party services)
+# @ TXT "google-site-verification=YOUR_VERIFICATION_CODE"
+
+---
+
+# CAA Records (Certification Authority Authorization)
+# Purpose: Specify which CAs can issue SSL certificates
+
+@ CAA 0 issue "letsencrypt.org"
+@ CAA 0 issuewild "letsencrypt.org"
+
+# If using other CAs:
+# @ CAA 0 issue "digicert.com"
+# @ CAA 0 issue "globalsign.com"
+
+# To prevent issuance by unauthorized CAs:
+# @ CAA 0 issue ";"
+
+---
+
+# SRV Records (Service Records) - Optional
+# Purpose: Specify service locations (e.g., for SIP, XMPP, etc.)
+# Format: _service._protocol.domain. SRV priority weight port target
+
+# Example for SIP (VoIP):
+# _sip._tcp SRV 10 60 5060 sip.fafaaccess.com
+
+---
+
+# NS Records (Name Servers) - Usually auto-configured
+# Purpose: Point to your DNS provider
+
+# If using Cloudflare:
+@ NS kate.ns.cloudflare.com
+@ NS kris.ns.cloudflare.com
+
+# If using AWS Route53:
+# @ NS ns-123.awsdns-45.com
+# @ NS ns-678.awsdns-90.us
+# @ NS ns-901.awsdns-23.co.uk
+# @ NS ns-234.awsdns-56.org
+
+---
+
+# SOA Record (Start of Authority) - Usually auto-configured
+# Purpose: Contains zone information
+
+# Example (auto-managed by most providers):
+@ SOA ns1.example.com. hostmaster.example.com. 2024012201 10800 3600 604800 3600
+
+---
+
+# Verification Records for Third-Party Services
+
+# Azure Services (if using Azure for anything):
+# azure-verification TXT "azure=YOUR_VERIFICATION_CODE"
+
+# Slack verification (if using Slack):
+# TXT "slack-domain-verification=YOUR_CODE"
+
+# Microsoft Teams verification:
+# TXT "MS=ms12345678"
+
+---
+
+# Email Forwarding (using forwarding service)
+# If you want to forward admin@fafaaccess.com to another email:
+# Set up with Cloudflare Email Routing or similar service
+
+---
+
+# Testing DNS Configuration
+
+# 1. Check A record
+# nslookup fafaaccess.com
+# Expected: Returns your_server_ip
+
+# 2. Check MX records
+# nslookup -type=MX fafaaccess.com
+# Expected: Returns mail server addresses
+
+# 3. Check SPF record
+# nslookup -type=TXT fafaaccess.com
+# Expected: Shows SPF record
+
+# 4. Check DMARC
+# nslookup -type=TXT _dmarc.fafaaccess.com
+# Expected: Shows DMARC policy
+
+# 5. Check CAA
+# nslookup -type=CAA fafaaccess.com
+# Expected: Shows authorized CAs
+
+# 6. Full propagation check
+# dig fafaaccess.com +short
+# dig fafaaccess.com MX +short
+# dig fafaaccess.com TXT +short
+
+---
+
+# Implementation Steps
+
+## Step 1: In Your DNS Provider (Cloudflare, Route53, etc.)
+
+1. Go to DNS settings
+2. Add each record above with your actual values:
+   - Replace YOUR_SERVER_IP with your production server IP
+   - Replace YOUR_CLOUDFLARE_ZONE with your zone ID
+   - Add records from your email provider (SPF, DKIM, DMARC)
+
+## Step 2: Update Nameservers (if registering elsewhere)
+
+1. Get nameservers from DNS provider
+2. Go to domain registrar (GoDaddy, Namecheap, etc.)
+3. Update nameservers to point to your DNS provider
+4. Wait 24-48 hours for propagation
+
+## Step 3: Verify Propagation
+
+# Linux/Mac:
+nslookup fafaaccess.com
+dig fafaaccess.com
+
+# Windows PowerShell:
+nslookup fafaaccess.com
+Resolve-DnsName -Name fafaaccess.com -Type A
+
+## Step 4: Test Email Configuration
+
+1. Send test email from fafaaccess.com
+2. Check that SPF/DKIM pass
+3. Use tools like MXToolbox or MailTester to verify
+
+## Step 5: Monitor
+
+1. Set up DNS monitoring alerts
+2. Check propagation daily for first week
+3. Verify MX records resolve correctly
+4. Monitor SSL certificate chain
+
+---
+
+# CloudFlare-Specific Configuration
+
+If using Cloudflare nameservers, you can also:
+
+1. Enable "Always Use HTTPS" in SSL/TLS tab
+2. Set Minimum TLS Version to 1.2
+3. Enable "Automatic HTTPS Rewrites"
+4. Add Page Rules for redirect (HTTP to HTTPS)
+5. Enable "Email Forwarding" for email management
+
+---
+
+# Security Best Practices
+
+✅ DO:
+- Add CAA records to restrict certificate issuance
+- Use DMARC to protect against spoofing
+- Enable DNSSEC if your provider supports it
+- Monitor DNS changes for security
+- Keep DNS records documented
+- Test email authentication regularly
+
+❌ DON'T:
+- Use wildcard records unless necessary
+- Share DNS credentials
+- Leave old records pointing to old servers
+- Ignore DNS propagation delays
+- Use weak/predictable DKIM keys
+- Configure too permissive SPF policies
+
+---
+
+# Troubleshooting DNS
+
+## Issue: DNS not propagating
+- Wait 24-48 hours (usually faster)
+- Clear local DNS cache: `ipconfig /flushdns` (Windows)
+- Test with different nameservers: `nslookup fafaaccess.com 8.8.8.8`
+- Check nameserver configuration in registrar
+
+## Issue: Email not working
+- Verify MX records exist
+- Check SPF record syntax: `nslookup -type=TXT fafaaccess.com`
+- Verify DKIM records are added correctly
+- Test with MXToolbox (mxtoolbox.com)
+
+## Issue: SSL certificate error
+- Verify CAA records are set correctly
+- Check Certificate Authority can issue (letsencrypt.org for Let's Encrypt)
+- Wait for DNS propagation before certificate issuance
+
+## Issue: Website not loading
+- Check A record points to correct IP: `nslookup fafaaccess.com`
+- Verify server is running on that IP
+- Check firewall rules allow port 80/443
+- Try direct IP access: `curl https://YOUR_SERVER_IP`
+
+---
+
+# Related Documentation
+- [Domain & SSL Setup Guide](./DOMAIN_AND_SSL_SETUP.md)
+- [Deployment Architecture](./DEPLOYMENT_ARCHITECTURE.md)
+- [Backend Configuration](./BACKEND_ARCHITECTURE_REFACTOR.md)

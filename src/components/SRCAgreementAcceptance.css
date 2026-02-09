@@ -1,0 +1,482 @@
+/**
+ * SRC Agreement Acceptance Component Styles
+ * 
+ * Styling for SRCAgreementAcceptance.jsx component
+ */
+
+.src-acceptance-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 40px 20px;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+}
+
+/* Header Card */
+.header-card {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.header-content h1 {
+  margin: 0 0 10px 0;
+  font-size: 32px;
+  font-weight: 700;
+  color: #333;
+}
+
+.header-content .subtitle {
+  margin: 0;
+  color: #999;
+  font-size: 16px;
+}
+
+.invitation-info {
+  margin-top: 25px;
+  padding-top: 25px;
+  border-top: 2px solid #f0f0f0;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.info-item {
+  display: flex;
+  flex-direction: column;
+}
+
+.info-label {
+  font-size: 12px;
+  color: #999;
+  text-transform: uppercase;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+.info-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+/* Alert */
+.alert {
+  padding: 15px 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border: 1px solid #f5c6cb;
+  color: #721c24;
+}
+
+.alert-info {
+  background-color: #d1ecf1;
+  border: 1px solid #bee5eb;
+  color: #0c5460;
+}
+
+/* Agreement Container */
+.agreement-container {
+  background: white;
+  border-radius: 12px;
+  padding: 40px;
+  margin-bottom: 30px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.agreement-section {
+  margin-bottom: 30px;
+}
+
+.agreement-section h2 {
+  margin: 0 0 15px 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #333;
+  padding-bottom: 15px;
+  border-bottom: 3px solid #667eea;
+}
+
+.agreement-section h3 {
+  margin: 0 0 12px 0;
+  font-size: 16px;
+  font-weight: 600;
+  color: #555;
+}
+
+.agreement-section p {
+  margin: 0 0 15px 0;
+  color: #666;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+.section-intro {
+  background: #f0f7ff;
+  padding: 15px;
+  border-left: 4px solid #667eea;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.agreement-section ul {
+  margin: 0 0 15px 0;
+  padding-left: 25px;
+  color: #666;
+  line-height: 1.8;
+  font-size: 14px;
+}
+
+.agreement-section li {
+  margin-bottom: 10px;
+}
+
+.agreement-section strong {
+  color: #333;
+  font-weight: 600;
+}
+
+/* Acceptance Section */
+.acceptance-section {
+  background: #f9f9f9;
+  padding: 30px;
+  border-radius: 8px;
+  border: 2px solid #f0f0f0;
+}
+
+.acceptance-section h3 {
+  margin-top: 0;
+  color: #667eea;
+  border-bottom: 2px solid #667eea;
+  padding-bottom: 10px;
+}
+
+/* Checkbox */
+.checkbox-group {
+  margin: 20px 0;
+}
+
+.checkbox-wrapper {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  cursor: pointer;
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+  transition: all 0.3s ease;
+}
+
+.checkbox-wrapper:hover {
+  border-color: #667eea;
+  background: #f0f7ff;
+}
+
+.form-checkbox {
+  width: 24px;
+  height: 24px;
+  min-width: 24px;
+  margin-top: 2px;
+  cursor: pointer;
+  accent-color: #667eea;
+}
+
+.checkbox-label {
+  color: #333;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* Agreement Actions */
+.agreement-actions {
+  margin-top: 25px;
+}
+
+.btn-large {
+  display: block;
+  width: 100%;
+  padding: 15px 24px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 15px;
+}
+
+.btn-large:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+.btn-large:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.action-note {
+  color: #999;
+  font-size: 13px;
+  text-align: center;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Footer */
+.acceptance-footer {
+  background: white;
+  border-radius: 12px;
+  padding: 20px;
+  text-align: center;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  font-size: 13px;
+  color: #999;
+}
+
+.acceptance-footer p {
+  margin: 0 0 10px 0;
+}
+
+.acceptance-footer p:last-child {
+  margin: 0;
+}
+
+.text-muted {
+  color: #999 !important;
+}
+
+/* Loading State */
+.loading-state {
+  background: white;
+  border-radius: 12px;
+  padding: 60px 40px;
+  text-align: center;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.spinner {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 4px solid #f0f0f0;
+  border-top-color: #667eea;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 20px;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-state p {
+  margin: 0;
+  color: #999;
+  font-size: 16px;
+}
+
+/* Error State */
+.error-state,
+.success-state {
+  background: white;
+  border-radius: 12px;
+  padding: 60px 40px;
+  text-align: center;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+}
+
+.error-icon,
+.success-icon {
+  font-size: 60px;
+  margin-bottom: 20px;
+}
+
+.error-state h1,
+.success-state h1 {
+  margin: 0 0 15px 0;
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+}
+
+.error-state p,
+.success-state p {
+  margin: 0 0 15px 0;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.error-state .help-text {
+  color: #999;
+  font-size: 13px;
+  margin-bottom: 20px;
+}
+
+/* Success State */
+.success-details {
+  background: #f0f7ff;
+  padding: 20px;
+  border-radius: 8px;
+  margin: 20px 0;
+  border-left: 4px solid #667eea;
+  text-align: left;
+}
+
+.success-details p {
+  margin: 0 0 10px 0;
+}
+
+.success-details p:last-child {
+  margin: 0;
+}
+
+.success-details ul {
+  margin: 10px 0;
+  padding-left: 20px;
+  color: #666;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.success-details li {
+  margin-bottom: 8px;
+}
+
+.contact-info {
+  background: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin: 15px 0;
+  font-size: 13px;
+  color: #666;
+}
+
+.contact-info strong {
+  color: #333;
+}
+
+.redirect-text {
+  color: #999;
+  font-size: 13px;
+  margin: 15px 0;
+  font-style: italic;
+}
+
+/* Buttons */
+.btn {
+  display: inline-block;
+  padding: 12px 28px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .src-acceptance-container {
+    padding: 20px 15px;
+  }
+
+  .header-card {
+    padding: 25px;
+  }
+
+  .header-card h1 {
+    font-size: 24px;
+  }
+
+  .invitation-info {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .agreement-container {
+    padding: 25px;
+  }
+
+  .agreement-section h2 {
+    font-size: 18px;
+  }
+
+  .agreement-section h3 {
+    font-size: 14px;
+  }
+
+  .agreement-section p,
+  .agreement-section ul {
+    font-size: 13px;
+  }
+
+  .acceptance-section {
+    padding: 20px;
+  }
+
+  .checkbox-wrapper {
+    padding: 12px;
+  }
+
+  .checkbox-label {
+    font-size: 13px;
+  }
+
+  .error-state,
+  .success-state {
+    padding: 40px 25px;
+  }
+
+  .error-state h1,
+  .success-state h1 {
+    font-size: 20px;
+  }
+
+  .error-icon,
+  .success-icon {
+    font-size: 45px;
+  }
+}

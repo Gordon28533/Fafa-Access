@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application Received</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      color: #1f2937;
+      line-height: 1.6;
+      background-color: #f3f4f6;
+    }
+    .wrapper { background-color: #f3f4f6; padding: 20px; }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .header p {
+      font-size: 14px;
+      opacity: 0.95;
+      font-weight: 400;
+    }
+    .content {
+      padding: 40px 30px;
+    }
+    .greeting {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: #374151;
+    }
+    .intro-text {
+      font-size: 15px;
+      color: #6b7280;
+      margin-bottom: 25px;
+      line-height: 1.7;
+    }
+    .status-box {
+      background: linear-gradient(135deg, #f0f9ff 0%, #eff6ff 100%);
+      border-left: 4px solid #3b82f6;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 4px;
+    }
+    .status-item {
+      display: flex;
+      padding: 8px 0;
+      font-size: 14px;
+    }
+    .status-label {
+      font-weight: 600;
+      color: #1f2937;
+      min-width: 160px;
+    }
+    .status-value {
+      color: #4b5563;
+    }
+    .section {
+      margin: 25px 0;
+    }
+    .section h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 12px;
+    }
+    .section p {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 12px 32px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      margin: 20px 0;
+      text-align: center;
+      transition: opacity 0.3s ease;
+    }
+    .cta-button:hover {
+      opacity: 0.9;
+    }
+    .divider {
+      height: 1px;
+      background-color: #e5e7eb;
+      margin: 30px 0;
+    }
+    .footer {
+      background-color: #f9fafb;
+      padding: 30px;
+      text-align: center;
+      border-top: 1px solid #e5e7eb;
+    }
+    .footer-text {
+      font-size: 12px;
+      color: #9ca3af;
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+    .footer-links {
+      font-size: 12px;
+      margin-top: 15px;
+    }
+    .footer-links a {
+      color: #3b82f6;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+    .badge {
+      display: inline-block;
+      background: #eff6ff;
+      color: #1e40af;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      margin: 5px 0;
+    }
+    @media (max-width: 600px) {
+      .wrapper { padding: 0; }
+      .container { border-radius: 0; }
+      .header { padding: 30px 20px; }
+      .header h1 { font-size: 24px; }
+      .content { padding: 30px 20px; }
+      .footer { padding: 20px; }
+      .status-item { flex-direction: column; }
+      .status-label { min-width: auto; margin-bottom: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>Application Received</h1>
+        <p>Your laptop application has been submitted successfully</p>
+      </div>
+
+      <!-- Content -->
+      <div class="content">
+        <p class="greeting">Dear {{name}},</p>
+        
+        <p class="intro-text">
+          We have successfully received your laptop application. Thank you for submitting your details.
+        </p>
+
+        <!-- Status Box -->
+        <div class="status-box">
+          <div class="status-item">
+            <span class="status-label">Application Reference:</span>
+            <span class="status-value"><strong>{{applicationRef}}</strong></span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Submission Date:</span>
+            <span class="status-value">{{submissionDate}}</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Current Status:</span>
+            <span class="status-value"><span class="badge">Pending SRC Review</span></span>
+          </div>
+        </div>
+
+        <!-- What's Next Section -->
+        <div class="section">
+          <h3>What Happens Next?</h3>
+          <p>Your application is now under review by the Student Representative Council (SRC). This is the first stage of our approval process, which typically takes 3-5 business days.</p>
+          <p>Key timeline:</p>
+          <ul style="margin-left: 20px; color: #6b7280; font-size: 14px;">
+            <li>Days 1-5: SRC Review</li>
+            <li>Days 6-10: Admin Review (if SRC approved)</li>
+            <li>Days 11-15: Delivery Scheduling (if Admin approved)</li>
+          </ul>
+        </div>
+
+        <!-- Action Section -->
+        <div class="section">
+          <h3>Track Your Application</h3>
+          <p>You can monitor your application status in real-time through your dashboard. Log in anytime to see updates.</p>
+          <a href="{{dashboardUrl}}" class="cta-button">View Application Status</a>
+        </div>
+
+        <!-- Important Notes -->
+        <div class="section" style="background-color: #f0fdf4; border-left: 4px solid #10b981; padding: 15px; border-radius: 4px; color: #1f2937;">
+          <h3 style="color: #047857; margin-top: 0;">Important Notes</h3>
+          <ul style="margin-left: 20px; font-size: 14px;">
+            <li>Keep your profile information updated</li>
+            <li>Respond promptly to any requests for additional information</li>
+            <li>Check your email regularly for updates</li>
+          </ul>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Support Section -->
+        <div class="section">
+          <p style="font-size: 13px; color: #9ca3af;">
+            If you have any questions about your application, please don't hesitate to contact us.
+          </p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p class="footer-text">
+          <strong>Fafa Access - Student Laptop Distribution Program</strong>
+        </p>
+        <p class="footer-text">
+          This is an automated notification. Please do not reply to this email.
+        </p>
+        <div class="footer-links">
+          <a href="https://fafaaccess.edu.gh/help">Help Center</a>
+          <a href="https://fafaaccess.edu.gh/faq">FAQ</a>
+          <a href="https://fafaaccess.edu.gh/contact">Contact Us</a>
+        </div>
+        <p class="footer-text">
+          © 2026 Fafa Access. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
