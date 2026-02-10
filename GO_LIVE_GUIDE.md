@@ -256,7 +256,42 @@ Check that `.env.example` has all needed variables (it does! ✅)
 
 ## 📊 RECOMMENDED NEXT STEPS
 
-### 1. Setup Email Notifications (SendGrid)
+### 1. Setup Datadog Monitoring (Recommended)
+Free tier perfect for monitoring your app!
+
+**Get API Keys:**
+1. Go to https://www.datadoghq.com
+2. Sign up (free account included)
+3. Go to Settings → API Keys → Create API Key (`DATADOG_API_KEY`)
+4. Go to Settings → Application Keys → Create App Key (`DATADOG_CLIENT_TOKEN`)
+5. Go to Settings → Integrations → Browser RUM to get APP ID
+
+**Add to Render Backend:**
+1. Render Dashboard → Your Service → Environment Variables
+2. Add:
+   ```
+   DATADOG_ENABLED=true
+   DATADOG_ENV=production
+   DATADOG_SERVICE=fafa-access-api
+   ```
+3. Save & Redeploy
+
+**Add to Vercel Frontend:**
+1. Vercel Project → Settings → Environment Variables
+2. Add:
+   ```
+   VITE_DATADOG_ENABLED=true
+   VITE_DATADOG_APP_ID=<your-app-id>
+   VITE_DATADOG_CLIENT_TOKEN=<your-client-token>
+   ```
+3. Redeploy
+
+**Monitor:**
+- Dashboard: https://app.datadoghq.com/dashboard
+- See real-time metrics, errors, performance, user sessions
+- **Cost:** Free tier (~$0/month)
+
+### 2. Setup Email Notifications (SendGrid)
 - Free tier: 100 emails/day
 - Get API key from sendgrid.com
 - Add to environment variables
