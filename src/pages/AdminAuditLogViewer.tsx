@@ -83,7 +83,7 @@ const AuditLogViewer: React.FC = () => {
   }, [actorId, actorRole, action, startDate, endDate, applicationId, limit, currentPage]);
 
   // Fetch audit log statistics
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const response = await fetch('/api/admin/audit-logs/stats', {
         headers: {
@@ -100,13 +100,13 @@ const AuditLogViewer: React.FC = () => {
     } catch (err) {
       console.error('Failed to fetch audit log stats:', err);
     }
-  };
+  }, []);
 
   // Initial load
   useEffect(() => {
     fetchLogs();
     fetchStats();
-  }, [fetchLogs]);
+  }, [fetchLogs, fetchStats]);
 
   // Handle filter change
   const handleFilterChange = () => {
