@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useAuth } from '../contexts/AuthContext';
+import { useAuth } from '../hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { Download } from 'lucide-react';
 import {
@@ -26,7 +26,7 @@ import '../styles/financial-analytics.css';
 import '../styles/delivery-analytics.css';
 
 export default function AdminAnalyticsDashboard() {
-  const { user } = useAuth();
+  const { user, authFetch } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [days, setDays] = useState(30);
@@ -51,6 +51,10 @@ export default function AdminAnalyticsDashboard() {
 
   // Fetch all analytics data
   useEffect(() => {
+    if (!user || user.role !== 'ADMIN') {
+      return;
+    }
+
     const fetchAnalytics = async () => {
       try {
         setLoading(true);
@@ -58,60 +62,15 @@ export default function AdminAnalyticsDashboard() {
 
         const [overviewRes, trendsRes, reviewRes, paymentsRes, deliveriesRes, universitiesRes, srcAccountabilityRes, financialRes, deliveryPerformanceRes] =
           await Promise.all([
-            fetch(
-              `/api/admin/analytics/overview?days=${days}`,
-              {
-                headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-              }
-            ),
-            fetch(
-              `/api/admin/analytics/trends?days=${days}`,
-              {
-                headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-              }
-            ),
-            fetch(
-              `/api/admin/analytics/review-times?days=${days}`,
-              {
-                headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-              }
-            ),
-            fetch(
-              `/api/admin/analytics/payments?days=${days}`,
-              {
-                headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-              }
-            ),
-            fetch(
-              `/api/admin/analytics/deliveries?days=${days}`,
-              {
-                headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-              }
-            ),
-            fetch(
-              `/api/admin/analytics/universities?days=${days}`,
-              {
-                headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-              }
-            ),
-            fetch(
-              `/api/admin/analytics/src-accountability?days=${days}`,
-              {
-                headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-              }
-            ),
-            fetch(
-              `/api/admin/analytics/financial?days=${days}`,
-              {
-                headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-              }
-            ),
-            fetch(
-              `/api/admin/analytics/delivery-performance?days=${days}`,
-              {
-                headers: { Authorization: `Bearer ${localStorage.getItem('accessToken')}` },
-              }
-            ),
+            authFetch(`/api/admin/analytics/overview?days=${days}`),
+            authFetch(`/api/admin/analytics/trends?days=${days}`),
+            authFetch(`/api/admin/analytics/review-times?days=${days}`),
+            authFetch(`/api/admin/analytics/payments?days=${days}`),
+            authFetch(`/api/admin/analytics/deliveries?days=${days}`),
+            authFetch(`/api/admin/analytics/universities?days=${days}`),
+            authFetch(`/api/admin/analytics/src-accountability?days=${days}`),
+            authFetch(`/api/admin/analytics/financial?days=${days}`),
+            authFetch(`/api/admin/analytics/delivery-performance?days=${days}`),
           ]);
 
         if (!overviewRes.ok)
@@ -164,7 +123,7 @@ export default function AdminAnalyticsDashboard() {
     };
 
     fetchAnalytics();
-  }, [days]);
+  }, [authFetch, days, user]);
 
   if (!user || user.role !== 'ADMIN') {
     return null; // Will redirect

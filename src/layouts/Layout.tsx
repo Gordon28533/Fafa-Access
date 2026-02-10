@@ -2,23 +2,21 @@ import { ReactNode } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../hooks/useAuth'
 import Footer from '../components/common/Footer'
+import { getRoleHome } from '../utils/roleRouting'
 
 interface LayoutProps {
   children: ReactNode
 }
 
 const Layout = ({ children }: LayoutProps) => {
-  const { user, isAuthenticated } = useAuth()
+  const { user, isAuthenticated, logout } = useAuth()
   const location = useLocation()
 
-  const ROLE_HOME: Record<string, string> = {
-    STUDENT: '/dashboard',
-    SRC: '/src/dashboard',
-    ADMIN: '/admin',
-    DELIVERY: '/delivery/queue',
-  }
+  const dashboardPath = getRoleHome(user?.role || '') || '/dashboard'
 
-  const dashboardPath = ROLE_HOME[user?.role || ''] || '/dashboard'
+  const handleLogout = () => {
+    logout()
+  }
 
   const isAdminRoute = isAuthenticated && user?.role === 'ADMIN' && location.pathname.startsWith('/admin')
 
@@ -54,19 +52,35 @@ const Layout = ({ children }: LayoutProps) => {
 
             <div className="flex items-center gap-3">
               {isAuthenticated ? (
-                <Link
-                  to={dashboardPath}
-                  className="inline-flex items-center rounded-full border border-gray-900 px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-900 hover:text-white transition-colors"
-                >
-                  Dashboard
-                </Link>
+                <>
+                  <Link
+                    to={dashboardPath}
+                    className="inline-flex items-center rounded-full border border-gray-900 px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-900 hover:text-white transition-colors"
+                  >
+                    Dashboard
+                  </Link>
+                  <button
+                    onClick={handleLogout}
+                    className="inline-flex items-center rounded-full border border-red-600 px-4 py-2 text-sm font-semibold text-red-600 hover:bg-red-600 hover:text-white transition-colors"
+                  >
+                    Logout
+                  </button>
+                </>
               ) : (
-                <Link
-                  to="/login"
-                  className="inline-flex items-center rounded-full border border-gray-900 px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-900 hover:text-white transition-colors"
-                >
-                  Login
-                </Link>
+                <>
+                  <Link
+                    to="/register"
+                    className="inline-flex items-center rounded-full border border-green-600 px-4 py-2 text-sm font-semibold text-green-600 hover:bg-green-600 hover:text-white transition-colors"
+                  >
+                    Register
+                  </Link>
+                  <Link
+                    to="/login"
+                    className="inline-flex items-center rounded-full border border-gray-900 px-4 py-2 text-sm font-semibold text-gray-900 hover:bg-gray-900 hover:text-white transition-colors"
+                  >
+                    Login
+                  </Link>
+                </>
               )}
             </div>
           </div>

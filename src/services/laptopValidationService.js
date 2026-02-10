@@ -111,6 +111,14 @@ export function validateLaptopCreation(data) {
   } else if (data.imageUrl && !isValidImageUrl(data.imageUrl)) {
     errors.push('Image URL does not appear to be valid');
   }
+  
+    if (data.universityId !== undefined && data.universityId !== null && typeof data.universityId !== 'string') {
+      errors.push('University ID must be a string');
+    }
+  
+    if (data.isActive !== undefined && typeof data.isActive !== 'boolean') {
+      errors.push('isActive must be a boolean');
+    }
 
   return {
     valid: errors.length === 0,
@@ -207,6 +215,14 @@ export function validateLaptopUpdate(data, existingLaptop) {
     errors.push('Image URL must be a string');
   } else if (data.imageUrl && !isValidImageUrl(data.imageUrl)) {
     errors.push('Image URL does not appear to be valid');
+  }
+
+  if (data.universityId !== undefined && data.universityId !== null && typeof data.universityId !== 'string') {
+    errors.push('University ID must be a string');
+  }
+
+  if (data.isActive !== undefined && typeof data.isActive !== 'boolean') {
+    errors.push('isActive must be a boolean');
   }
 
   return {

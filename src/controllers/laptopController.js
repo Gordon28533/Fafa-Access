@@ -68,7 +68,8 @@ export const createLaptop = async (req, res) => {
         discountedPrice: parseFloat(laptopData.discountedPrice),
         stockQuantity: parseInt(laptopData.stockQuantity || 0),
         imageUrl: laptopData.imageUrl || null,
-        isActive: true, // New laptops are active by default
+        universityId: laptopData.universityId || null,
+        isActive: typeof laptopData.isActive === 'boolean' ? laptopData.isActive : true,
         price: parseFloat(laptopData.discountedPrice), // For backward compatibility
       })
       .returning();
@@ -105,22 +106,17 @@ export const createLaptop = async (req, res) => {
 
 /**
  * GET /api/laptops
- * Get all laptops (active only for students, all for admins)
+ * Get all active laptops (public endpoint - no authentication required)
+ * Returns only active laptops for students and visitors
+ * Admins can use /api/laptops/admin/all to see all laptops
  */
-export const getLaptops = async (req, res) => {
+export const getActiveLaptops = async (req, res) => {
   try {
-    const userRole = req.user.role;
-
-    // Students only see active laptops, admins see all
-    const query =
-      userRole === 'ADMIN'
-        ? db.select().from(laptops)
-        : db
-            .select()
-            .from(laptops)
-            .where(eq(laptops.isActive, true));
-
-    const allLaptops = await query;
+    // Always return only active laptops for this public endpoint
+    const allLaptops = await db
+      .select()
+      .from(laptops)
+      .where(eq(laptops.isActive, true));
 
     res.json({
       success: true,
@@ -321,32 +317,6 @@ export const getLowStockLaptops = async (req, res) => {
 };
 
 /**
- * GET /api/laptops
- * Get all active laptops (authenticated users)
- */
-export const getActiveLaptops = async (req, res) => {
-  try {
-    const activeLaptops = await db
-      .select()
-      .from(laptops)
-      .where(eq(laptops.isActive, true));
-
-    res.json({
-      success: true,
-      message: 'Active laptops retrieved',
-      data: { laptops: activeLaptops }
-    });
-  } catch (error) {
-    logger.error({ err: error }, 'Error fetching active laptops');
-    res.status(500).json({
-      success: false,
-      message: 'Failed to fetch active laptops',
-      errors: [error.message]
-    });
-  }
-};
-
-/**
  * GET /api/laptops/admin/all
  * Get all laptops including inactive (ADMIN ONLY)
  */
@@ -502,6 +472,8 @@ export const updateLaptop = async (req, res) => {
     }
     if (updateData.stockQuantity !== undefined) updatePayload.stockQuantity = parseInt(updateData.stockQuantity);
     if (updateData.imageUrl !== undefined) updatePayload.imageUrl = updateData.imageUrl || null;
+    if (updateData.universityId !== undefined) updatePayload.universityId = updateData.universityId || null;
+    if (updateData.isActive !== undefined) updatePayload.isActive = Boolean(updateData.isActive);
     updatePayload.updatedAt = new Date();
 
     const [updated] = await db

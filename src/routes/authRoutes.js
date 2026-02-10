@@ -17,6 +17,7 @@ const router = express.Router();
 // Public routes (with rate limiting)
 router.post('/register', authLimiter, register);
 router.post('/login', authLimiter, login);
+// Refresh endpoint excluded from rate limiting to prevent token refresh loops
 router.post('/refresh', refresh);
 router.get('/verify-email/:token', verifyEmail);
 router.post('/request-password-reset', authLimiter, requestPasswordReset);

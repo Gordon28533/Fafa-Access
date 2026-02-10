@@ -23,6 +23,8 @@ function LaptopInventoryPage() {
   const [showAddForm, setShowAddForm] = useState(false);
   const [editingId, setEditingId] = useState(null);
   const [imagePreview, setImagePreview] = useState('');
+  const [universities, setUniversities] = useState([]);
+  const [universitiesLoading, setUniversitiesLoading] = useState(false);
   const [formData, setFormData] = useState({
     brand: '',
     model: '',
@@ -35,6 +37,8 @@ function LaptopInventoryPage() {
     discountedPrice: '',
     stockQuantity: '0',
     imageUrl: '',
+    universityId: '',
+    isActive: false,
   });
 
   const fetchData = useCallback(async () => {
@@ -67,6 +71,23 @@ function LaptopInventoryPage() {
     }
   }, [authFetch]);
 
+  const fetchUniversities = useCallback(async () => {
+    try {
+      setUniversitiesLoading(true);
+      const res = await authFetch('/api/admin/universities');
+      if (!res.ok) {
+        throw new Error('Failed to fetch universities');
+      }
+      const data = await res.json();
+      setUniversities(data.data?.universities || []);
+    } catch (err) {
+      console.error('Error fetching universities:', err);
+      setUniversities([]);
+    } finally {
+      setUniversitiesLoading(false);
+    }
+  }, [authFetch]);
+
   // Fetch data on mount
   useEffect(() => {
     if (user && !isAdmin(user)) {
@@ -74,7 +95,8 @@ function LaptopInventoryPage() {
       return;
     }
     fetchData();
-  }, [fetchData, navigate, user]);
+    fetchUniversities();
+  }, [fetchData, fetchUniversities, navigate, user]);
 
   useEffect(() => {
     if (formData.imageUrl) {
@@ -98,6 +120,8 @@ function LaptopInventoryPage() {
       discountedPrice: '',
       stockQuantity: '0',
       imageUrl: '',
+      universityId: '',
+      isActive: false,
     });
     setImagePreview('');
     setShowAddForm(true);
@@ -117,16 +141,18 @@ function LaptopInventoryPage() {
       discountedPrice: laptop.discountedPrice.toString(),
       stockQuantity: laptop.stockQuantity.toString(),
       imageUrl: laptop.imageUrl || '',
+      universityId: laptop.universityId || '',
+      isActive: Boolean(laptop.isActive),
     });
     setImagePreview(laptop.imageUrl || '');
     setShowAddForm(true);
   };
 
   const handleFormChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value,
+      [name]: type === 'checkbox' ? checked : value,
     }));
   };
 
@@ -136,6 +162,11 @@ function LaptopInventoryPage() {
 
     if (file.size > MAX_IMAGE_SIZE_BYTES) {
       setError('Image size must be 2MB or less');
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      setError('File must be an image');
       return;
     }
 
@@ -162,13 +193,13 @@ function LaptopInventoryPage() {
         return;
       }
 
-      if (!formData.originalPrice || !formData.discountedPrice) {
-        setError('Original and Discounted prices are required');
+      if (!formData.discountedPrice) {
+        setError('Program price is required');
         return;
       }
 
-      const originalPrice = Number(formData.originalPrice);
       const discountedPrice = Number(formData.discountedPrice);
+      const originalPrice = Number(formData.originalPrice || formData.discountedPrice);
       const stockQuantity = parseInt(formData.stockQuantity || '0', 10);
 
       if (Number.isNaN(originalPrice) || Number.isNaN(discountedPrice)) {
@@ -176,17 +207,28 @@ function LaptopInventoryPage() {
         return;
       }
 
-      if (discountedPrice > originalPrice) {
-        setError('Discounted price cannot exceed original price');
+      if (originalPrice < discountedPrice) {
+        setError('Reference price cannot be lower than program price');
         return;
       }
 
       const payload = {
-        ...formData,
+        brand: formData.brand.trim(),
+        model: formData.model.trim(),
+        processor: formData.processor?.trim() || null,
+        ram: formData.ram?.trim() || null,
+        storage: formData.storage?.trim() || null,
+        screen: formData.screen?.trim() || null,
+        serialNumber: formData.serialNumber.trim(),
         originalPrice,
         discountedPrice,
         stockQuantity: Number.isNaN(stockQuantity) ? 0 : stockQuantity,
+        imageUrl: formData.imageUrl?.trim() || null,
+        universityId: formData.universityId || null,
+        isActive: Boolean(formData.isActive),
       };
+
+      console.log('[LaptopInventory] Submitting payload:', payload);
 
       const url = editingId
         ? `/api/laptops/admin/${editingId}`
@@ -201,7 +243,11 @@ function LaptopInventoryPage() {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.message || 'Failed to save laptop');
+        // Show detailed validation errors if available
+        const errorMessage = data.errors && data.errors.length > 0
+          ? data.errors.join(', ')
+          : (data.message || 'Failed to save laptop');
+        throw new Error(errorMessage);
       }
 
       setShowAddForm(false);
@@ -255,6 +301,30 @@ function LaptopInventoryPage() {
       setError(err.message);
       console.error('Error adjusting stock:', err);
     }
+  };
+
+  const formatCurrency = (value) => {
+    const numeric = Number(value || 0);
+    return numeric.toFixed(2);
+  };
+
+  const getStockStatus = (laptop) => {
+    if (!laptop.isActive) {
+      return { label: 'Draft', className: 'bg-slate-100 text-slate-700' };
+    }
+    if ((laptop.stockQuantity || 0) <= 0) {
+      return { label: 'Out of Stock', className: 'bg-rose-100 text-rose-700' };
+    }
+    if ((laptop.stockQuantity || 0) <= 5) {
+      return { label: 'Low Stock', className: 'bg-amber-100 text-amber-700' };
+    }
+    return { label: 'In Stock', className: 'bg-emerald-100 text-emerald-700' };
+  };
+
+  const getUniversityName = (universityId) => {
+    if (!universityId) return 'All Universities';
+    const match = universities.find((uni) => uni.id === universityId);
+    return match ? match.name : 'Unknown University';
   };
 
   if (loading) {
@@ -327,138 +397,223 @@ function LaptopInventoryPage() {
         {/* Add/Edit Form */}
         {showAddForm && (
           <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-            <div className="bg-white rounded-lg shadow-lg max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="bg-white rounded-lg shadow-lg max-w-3xl w-full max-h-[90vh] overflow-y-auto">
               <div className="p-6">
-                <h2 className="text-2xl font-bold mb-6">
-                  {editingId ? 'Edit Laptop' : 'Add New Laptop'}
-                </h2>
-
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <input
-                      type="text"
-                      name="brand"
-                      placeholder="Brand"
-                      value={formData.brand}
-                      onChange={handleFormChange}
-                      className="border rounded px-3 py-2"
-                      required
-                    />
-                    <input
-                      type="text"
-                      name="model"
-                      placeholder="Model"
-                      value={formData.model}
-                      onChange={handleFormChange}
-                      className="border rounded px-3 py-2"
-                      required
-                    />
-                    <input
-                      type="text"
-                      name="processor"
-                      placeholder="Processor"
-                      value={formData.processor}
-                      onChange={handleFormChange}
-                      className="border rounded px-3 py-2"
-                    />
-                    <input
-                      type="text"
-                      name="ram"
-                      placeholder="RAM (e.g., 8GB)"
-                      value={formData.ram}
-                      onChange={handleFormChange}
-                      className="border rounded px-3 py-2"
-                    />
-                    <input
-                      type="text"
-                      name="storage"
-                      placeholder="Storage (e.g., 512GB SSD)"
-                      value={formData.storage}
-                      onChange={handleFormChange}
-                      className="border rounded px-3 py-2"
-                    />
-                    <input
-                      type="text"
-                      name="screen"
-                      placeholder="Screen (e.g., 15.6 FHD)"
-                      value={formData.screen}
-                      onChange={handleFormChange}
-                      className="border rounded px-3 py-2"
-                    />
-                    <input
-                      type="text"
-                      name="serialNumber"
-                      placeholder="Serial Number"
-                      value={formData.serialNumber}
-                      onChange={handleFormChange}
-                      className="border rounded px-3 py-2"
-                      required
-                    />
-                    <input
-                      type="number"
-                      name="originalPrice"
-                      placeholder="Original Price (GHS)"
-                      value={formData.originalPrice}
-                      onChange={handleFormChange}
-                      className="border rounded px-3 py-2"
-                      step="0.01"
-                      required
-                    />
-                    <input
-                      type="number"
-                      name="discountedPrice"
-                      placeholder="Discounted Price (GHS)"
-                      value={formData.discountedPrice}
-                      onChange={handleFormChange}
-                      className="border rounded px-3 py-2"
-                      step="0.01"
-                      required
-                    />
-                    <input
-                      type="number"
-                      name="stockQuantity"
-                      placeholder="Stock Quantity"
-                      value={formData.stockQuantity}
-                      onChange={handleFormChange}
-                      className="border rounded px-3 py-2"
-                      min="0"
-                    />
-                    <div className="md:col-span-2">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Image Upload (JPG, PNG, WEBP)
-                      </label>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageUpload}
-                        className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
-                      />
-                      <p className="text-xs text-gray-500 mt-2">
-                        You can also paste a hosted image URL below.
-                      </p>
-                    </div>
-                    <input
-                      type="url"
-                      name="imageUrl"
-                      placeholder="Image URL (optional)"
-                      value={formData.imageUrl}
-                      onChange={handleFormChange}
-                      className="border rounded px-3 py-2 md:col-span-2"
-                    />
+                <div className="flex items-start justify-between gap-6 mb-6">
+                  <div>
+                    <h2 className="text-2xl font-bold text-gray-900">
+                      {editingId ? 'Edit Laptop' : 'Add New Laptop'}
+                    </h2>
+                    <p className="text-sm text-gray-600 mt-1">
+                      Internal inventory management only. Pricing is split 70% on delivery and 30% later.
+                    </p>
                   </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowAddForm(false)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    ✕
+                  </button>
+                </div>
 
-                  {imagePreview && (
-                    <div className="mt-4">
-                      <p className="text-sm font-medium text-gray-700 mb-2">Preview</p>
-                      <div className="border rounded-lg p-4 bg-gray-50 flex items-center justify-center">
-                        <img
-                          src={imagePreview}
-                          alt="Laptop preview"
-                          className="max-h-48 rounded shadow"
-                        />
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <section className="border rounded-lg p-4">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-4">Basic Details</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <input
+                        type="text"
+                        name="brand"
+                        placeholder="Brand"
+                        value={formData.brand}
+                        onChange={handleFormChange}
+                        className="border rounded px-3 py-2"
+                        required
+                      />
+                      <input
+                        type="text"
+                        name="model"
+                        placeholder="Model"
+                        value={formData.model}
+                        onChange={handleFormChange}
+                        className="border rounded px-3 py-2"
+                        required
+                      />
+                      <input
+                        type="text"
+                        name="serialNumber"
+                        placeholder="Serial Number"
+                        value={formData.serialNumber}
+                        onChange={handleFormChange}
+                        className="border rounded px-3 py-2"
+                        required
+                      />
+                      <input
+                        type="text"
+                        name="processor"
+                        placeholder="Processor"
+                        value={formData.processor}
+                        onChange={handleFormChange}
+                        className="border rounded px-3 py-2"
+                      />
+                      <input
+                        type="text"
+                        name="ram"
+                        placeholder="RAM (e.g., 8GB)"
+                        value={formData.ram}
+                        onChange={handleFormChange}
+                        className="border rounded px-3 py-2"
+                      />
+                      <input
+                        type="text"
+                        name="storage"
+                        placeholder="Storage (e.g., 512GB SSD)"
+                        value={formData.storage}
+                        onChange={handleFormChange}
+                        className="border rounded px-3 py-2"
+                      />
+                      <input
+                        type="text"
+                        name="screen"
+                        placeholder="Screen (e.g., 15.6 FHD)"
+                        value={formData.screen}
+                        onChange={handleFormChange}
+                        className="border rounded px-3 py-2 md:col-span-2"
+                      />
+                    </div>
+                  </section>
+
+                  <section className="border rounded-lg p-4">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-4">Pricing (Fixed Split)</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <input
+                        type="number"
+                        name="discountedPrice"
+                        placeholder="Program Price (Total GHS)"
+                        value={formData.discountedPrice}
+                        onChange={handleFormChange}
+                        className="border rounded px-3 py-2"
+                        step="0.01"
+                        required
+                      />
+                      <input
+                        type="number"
+                        name="originalPrice"
+                        placeholder="Reference Price (Optional)"
+                        value={formData.originalPrice}
+                        onChange={handleFormChange}
+                        className="border rounded px-3 py-2"
+                        step="0.01"
+                      />
+                    </div>
+                    <div className="mt-3 text-sm text-gray-600 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <p className="text-xs uppercase text-gray-500">Pay on Delivery (70%)</p>
+                        <p className="font-semibold text-gray-900">
+                          GHS {formatCurrency(Number(formData.discountedPrice || 0) * 0.7)}
+                        </p>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <p className="text-xs uppercase text-gray-500">Pay Later (30%)</p>
+                        <p className="font-semibold text-gray-900">
+                          GHS {formatCurrency(Number(formData.discountedPrice || 0) * 0.3)}
+                        </p>
+                      </div>
+                      <div className="bg-gray-50 rounded-lg p-3">
+                        <p className="text-xs uppercase text-gray-500">Program Total</p>
+                        <p className="font-semibold text-gray-900">
+                          GHS {formatCurrency(formData.discountedPrice || 0)}
+                        </p>
                       </div>
                     </div>
-                  )}
+                  </section>
+
+                  <section className="border rounded-lg p-4">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-4">Availability & Stock</h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <select
+                        name="universityId"
+                        value={formData.universityId}
+                        onChange={handleFormChange}
+                        className="border rounded px-3 py-2"
+                      >
+                        <option value="">All Universities</option>
+                        {universities.map((uni) => (
+                          <option key={uni.id} value={uni.id}>
+                            {uni.name}
+                          </option>
+                        ))}
+                      </select>
+                      <input
+                        type="number"
+                        name="stockQuantity"
+                        placeholder="Stock Quantity"
+                        value={formData.stockQuantity}
+                        onChange={handleFormChange}
+                        className="border rounded px-3 py-2"
+                        min="0"
+                      />
+                    </div>
+                    <div className="mt-4 flex items-center gap-3">
+                      <label className="flex items-center gap-2 text-sm text-gray-700">
+                        <input
+                          type="checkbox"
+                          name="isActive"
+                          checked={formData.isActive}
+                          onChange={handleFormChange}
+                          className="h-4 w-4"
+                        />
+                        Published (visible to students)
+                      </label>
+                      <span className={`text-xs px-2 py-1 rounded-full ${formData.isActive ? 'bg-emerald-100 text-emerald-700' : 'bg-slate-100 text-slate-700'}`}>
+                        {formData.isActive ? 'Published' : 'Draft'}
+                      </span>
+                    </div>
+                    {universitiesLoading && (
+                      <p className="text-xs text-gray-500 mt-2">Loading universities...</p>
+                    )}
+                  </section>
+
+                  <section className="border rounded-lg p-4">
+                    <h3 className="text-sm font-semibold text-gray-900 mb-4">Media</h3>
+                    <div className="grid grid-cols-1 gap-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2">
+                          Image Upload (JPG, PNG, WEBP)
+                        </label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageUpload}
+                          className="block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:text-sm file:font-semibold file:bg-gray-100 file:text-gray-700 hover:file:bg-gray-200"
+                        />
+                        <p className="text-xs text-gray-500 mt-2">
+                          You can also paste a hosted image URL below.
+                        </p>
+                      </div>
+                      <input
+                        type="url"
+                        name="imageUrl"
+                        placeholder="Image URL (optional)"
+                        value={formData.imageUrl}
+                        onChange={handleFormChange}
+                        className="border rounded px-3 py-2"
+                      />
+                    </div>
+
+                    {imagePreview && (
+                      <div className="mt-4">
+                        <p className="text-sm font-medium text-gray-700 mb-2">Preview</p>
+                        <div className="border rounded-lg p-4 bg-gray-50 flex items-center justify-center">
+                          <img
+                            src={imagePreview}
+                            alt="Laptop preview"
+                            className="max-h-48 rounded shadow"
+                          />
+                        </div>
+                      </div>
+                    )}
+                  </section>
 
                   <div className="flex gap-4 mt-6">
                     <button
@@ -486,101 +641,108 @@ function LaptopInventoryPage() {
           <table className="w-full">
             <thead className="bg-gray-100 border-b">
               <tr>
-                <th className="px-6 py-3 text-left font-semibold">Brand/Model</th>
-                <th className="px-6 py-3 text-left font-semibold">Serial</th>
-                <th className="px-6 py-3 text-left font-semibold">Specs</th>
-                <th className="px-6 py-3 text-right font-semibold">Price (GHS)</th>
+                <th className="px-6 py-3 text-left font-semibold">Laptop</th>
+                <th className="px-6 py-3 text-left font-semibold">Availability</th>
+                <th className="px-6 py-3 text-left font-semibold">Pricing (GHS)</th>
                 <th className="px-6 py-3 text-center font-semibold">Stock</th>
-                <th className="px-6 py-3 text-center font-semibold">Status</th>
+                <th className="px-6 py-3 text-center font-semibold">State</th>
                 <th className="px-6 py-3 text-center font-semibold">Actions</th>
               </tr>
             </thead>
             <tbody>
-              {laptops.map((laptop) => (
-                <tr key={laptop.id} className="border-b hover:bg-gray-50">
-                  <td className="px-6 py-4">
-                    <div>
-                      <p className="font-semibold">{laptop.brand} {laptop.model}</p>
-                      {laptop.imageUrl && (
-                        <img
-                          src={laptop.imageUrl}
-                          alt={`${laptop.brand} ${laptop.model}`}
-                          className="w-12 h-12 mt-2 rounded"
-                        />
-                      )}
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-sm">{laptop.serialNumber}</td>
-                  <td className="px-6 py-4 text-sm">
-                    {laptop.processor && <p>{laptop.processor}</p>}
-                    {laptop.ram && <p>{laptop.ram}</p>}
-                    {laptop.storage && <p>{laptop.storage}</p>}
-                  </td>
-                  <td className="px-6 py-4 text-right">
-                    <div>
-                      <p className="text-sm line-through text-gray-500">
-                        {laptop.originalPrice.toFixed(2)}
+              {laptops.map((laptop) => {
+                const stockStatus = getStockStatus(laptop);
+                return (
+                  <tr key={laptop.id} className="border-b hover:bg-gray-50">
+                    <td className="px-6 py-4">
+                      <div className="flex items-center gap-4">
+                        <div className="w-12 h-12 rounded bg-gray-100 overflow-hidden flex items-center justify-center">
+                          {laptop.imageUrl ? (
+                            <img
+                              src={laptop.imageUrl}
+                              alt={`${laptop.brand} ${laptop.model}`}
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <span className="text-xs text-gray-400">No Image</span>
+                          )}
+                        </div>
+                        <div>
+                          <p className="font-semibold text-gray-900">
+                            {laptop.brand} {laptop.model}
+                          </p>
+                          <p className="text-xs text-gray-500">
+                            {laptop.processor || 'Processor'} · {laptop.ram || 'RAM'} · {laptop.storage || 'Storage'}
+                          </p>
+                          <p className="text-xs text-gray-400">Serial: {laptop.serialNumber}</p>
+                        </div>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-sm">
+                      <p className="font-medium text-gray-900">
+                        {getUniversityName(laptop.universityId)}
                       </p>
-                      <p className="font-semibold text-green-600">
-                        {laptop.discountedPrice.toFixed(2)}
+                      <p className="text-xs text-gray-500">
+                        {laptop.universityId ? 'University-only listing' : 'Visible to all campuses'}
                       </p>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <div className="flex items-center justify-center gap-2">
-                      <button
-                        onClick={() => handleAdjustStock(laptop.id, -1)}
-                        className="bg-red-100 text-red-600 px-2 py-1 rounded text-sm hover:bg-red-200"
-                        disabled={laptop.stockQuantity === 0}
-                      >
-                        -
-                      </button>
-                      <span className="font-semibold w-8 text-center">
-                        {laptop.stockQuantity}
+                    </td>
+                    <td className="px-6 py-4">
+                      <p className="text-sm text-gray-600">Program Total</p>
+                      <p className="font-semibold text-gray-900">GHS {formatCurrency(laptop.discountedPrice)}</p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        70%: GHS {formatCurrency(laptop.discountedPrice * 0.7)} · 30%: GHS {formatCurrency(laptop.discountedPrice * 0.3)}
+                      </p>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <div className="flex items-center justify-center gap-2">
+                        <button
+                          onClick={() => handleAdjustStock(laptop.id, -1)}
+                          className="bg-red-100 text-red-600 px-2 py-1 rounded text-sm hover:bg-red-200"
+                          disabled={laptop.stockQuantity === 0}
+                        >
+                          -
+                        </button>
+                        <span className="font-semibold w-8 text-center">
+                          {laptop.stockQuantity}
+                        </span>
+                        <button
+                          onClick={() => handleAdjustStock(laptop.id, 1)}
+                          className="bg-green-100 text-green-600 px-2 py-1 rounded text-sm hover:bg-green-200"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <span className={`px-3 py-1 rounded-full text-xs font-semibold ${stockStatus.className}`}>
+                        {stockStatus.label}
                       </span>
-                      <button
-                        onClick={() => handleAdjustStock(laptop.id, 1)}
-                        className="bg-green-100 text-green-600 px-2 py-1 rounded text-sm hover:bg-green-200"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        laptop.isActive
-                          ? 'bg-green-100 text-green-800'
-                          : 'bg-gray-100 text-gray-800'
-                      }`}
-                    >
-                      {laptop.isActive ? 'Active' : 'Inactive'}
-                    </span>
-                  </td>
-                  <td className="px-6 py-4 text-center">
-                    <div className="flex gap-2 justify-center">
-                      <button
-                        onClick={() => handleEditClick(laptop)}
-                        className="bg-blue-100 text-blue-600 px-3 py-1 rounded text-sm hover:bg-blue-200"
-                      >
-                        Edit
-                      </button>
-                      <button
-                        onClick={() =>
-                          handleToggleActive(laptop.id, laptop.isActive)
-                        }
-                        className={`px-3 py-1 rounded text-sm ${
-                          laptop.isActive
-                            ? 'bg-yellow-100 text-yellow-600 hover:bg-yellow-200'
-                            : 'bg-green-100 text-green-600 hover:bg-green-200'
-                        }`}
-                      >
-                        {laptop.isActive ? 'Deactivate' : 'Activate'}
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="px-6 py-4 text-center">
+                      <div className="flex gap-2 justify-center">
+                        <button
+                          onClick={() => handleEditClick(laptop)}
+                          className="bg-blue-100 text-blue-600 px-3 py-1 rounded text-sm hover:bg-blue-200"
+                        >
+                          Edit
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleToggleActive(laptop.id, laptop.isActive)
+                          }
+                          className={`px-3 py-1 rounded text-sm ${
+                            laptop.isActive
+                              ? 'bg-yellow-100 text-yellow-600 hover:bg-yellow-200'
+                              : 'bg-green-100 text-green-600 hover:bg-green-200'
+                          }`}
+                        >
+                          {laptop.isActive ? 'Unpublish' : 'Publish'}
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

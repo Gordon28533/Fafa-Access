@@ -1,14 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-
-// Role-based redirect map
-const ROLE_REDIRECT = {
-  STUDENT: '/dashboard',
-  SRC: '/src/dashboard',
-  ADMIN: '/admin',
-  DELIVERY: '/delivery/queue',
-};
+import { getRoleHome, normalizeRole, VALID_ROLES } from '../utils/roleRouting';
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({
@@ -68,12 +61,12 @@ export default function LoginPage() {
       }
       
       // CRITICAL: Normalize role to uppercase for consistency
-      const userRole = String(response.user.role).toUpperCase();
-      const redirectPath = ROLE_REDIRECT[userRole];
+      const userRole = normalizeRole(response.user.role);
+      const redirectPath = getRoleHome(userRole);
       
       // CRITICAL: If no redirect path found, force logout and show error
       if (!redirectPath) {
-        console.error('[LoginPage] Invalid role detected:', response.user.role, 'Available roles:', Object.keys(ROLE_REDIRECT));
+        console.error('[LoginPage] Invalid role detected:', response.user.role, 'Available roles:', VALID_ROLES);
         await logout();
         throw new Error(`Invalid user role: ${response.user.role}. Please contact support.`);
       }

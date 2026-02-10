@@ -4,7 +4,6 @@ import { useAuth } from '../hooks/useAuth'
 import LaptopGrid from '../components/laptop/LaptopGrid'
 import ApplyModal from '../components/apply/ApplyModal'
 import FilterBar from '../components/laptop/FilterBar'
-import { createLaptopService } from '../services/laptopService'
 import { isLaptopAvailable } from '../utils/stockUtils'
 import { 
   getDefaultFilters, 
@@ -33,10 +32,16 @@ const LaptopCatalog = () => {
       try {
         setLoading(true)
         
-        // Always fetch from backend via authFetch (enforces student visibility rules)
-        const laptopService = createLaptopService(authFetch)
-        const response = await laptopService.getActiveLaptops()
-        setAllLaptops(response.data?.laptops || [])
+        // Fetch laptops - works for both authenticated and unauthenticated users
+        // Public endpoint shows only active laptops
+        const response = await fetch('/api/laptops')
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch laptops')
+        }
+        
+        const data = await response.json()
+        setAllLaptops(data.data?.laptops || [])
         
         setError(null)
       } catch (err) {
@@ -48,7 +53,7 @@ const LaptopCatalog = () => {
     }
 
     fetchLaptops()
-  }, [isAuthenticated, authFetch])
+  }, [])
 
   // Get available filter options from all laptops
   const filterOptions = useMemo(() => {
@@ -91,9 +96,14 @@ const LaptopCatalog = () => {
       <div className="bg-gradient-to-r from-green-600 to-green-700 text-white py-12 px-4">
         <div className="max-w-7xl mx-auto">
           <h1 className="text-4xl font-bold mb-3">Available Laptops</h1>
-          <p className="text-green-100 text-lg max-w-2xl">
+          <p className="text-green-100 text-lg max-w-2xl mb-3">
             Browse our collection of quality laptops designed for students. Find the perfect device for your academic needs.
           </p>
+          {!isAuthenticated && (
+            <p className="text-green-50 text-sm max-w-2xl">
+              <strong>Note:</strong> You can browse all laptops freely. Please <a href="/login" className="underline font-semibold hover:text-white">sign in</a> or <a href="/register" className="underline font-semibold hover:text-white">register</a> to apply for a laptop.
+            </p>
+          )}
         </div>
       </div>
 

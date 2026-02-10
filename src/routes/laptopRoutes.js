@@ -19,10 +19,11 @@ import {
 
 const router = express.Router();
 
-// ========== STUDENT ROUTES ==========
+// ========== PUBLIC ROUTES ==========
 
-// GET /api/laptops - Get all active laptops (public for authenticated users)
-router.get('/', authenticate, getActiveLaptops);
+// GET /api/laptops - Get all active laptops (public - no authentication required)
+// Visitors and students can browse laptops without logging in
+router.get('/', getActiveLaptops);
 
 // ========== ADMIN ROUTES ==========
 

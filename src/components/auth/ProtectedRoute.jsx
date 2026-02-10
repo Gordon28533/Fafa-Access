@@ -1,17 +1,8 @@
 import { Navigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { getRoleHome, normalizeRole } from '../../utils/roleRouting';
 
 const isDevelopment = import.meta.env.DEV;
-
-const normalizeRole = (role) => {
-  if (!role) return '';
-  const normalized = String(role).toUpperCase().trim();
-  // Dev logging (remove in production if needed)
-  if (isDevelopment) {
-    console.log('[ProtectedRoute] Role normalized:', role, '→', normalized);
-  }
-  return normalized;
-};
 
 export function ProtectedRoute({ children, allowedRoles, redirectTo = null }) {
   const { user, loading } = useAuth();
@@ -70,13 +61,6 @@ export function GuestRoute({ children }) {
   const { user, loading } = useAuth();
 
   // Role-based redirect for logged-in users
-  const ROLE_HOME = {
-    STUDENT: '/dashboard',
-    SRC: '/src/dashboard',
-    ADMIN: '/admin',
-    DELIVERY: '/delivery/queue',
-  };
-
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
@@ -88,7 +72,7 @@ export function GuestRoute({ children }) {
   // If user is logged in, redirect to their role-specific dashboard
   if (user) {
     const userRole = normalizeRole(user.role);
-    const rolePath = ROLE_HOME[userRole] || '/';
+    const rolePath = getRoleHome(userRole) || '/';
     
     if (isDevelopment) {
       console.log('[GuestRoute] User logged in. Role:', userRole, 'Redirecting to:', rolePath);

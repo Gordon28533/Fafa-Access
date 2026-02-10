@@ -42,6 +42,9 @@ export const filterLaptops = (laptops, filters) => {
 
     // Filter by RAM size
     if (filters.ramSizes.length > 0) {
+      if (!laptop.specs || !laptop.specs.ram) {
+        return false
+      }
       const laptopRam = laptop.specs.ram
       // Extract numeric value from RAM string (e.g., "16GB" -> 16)
       const ramMatch = laptopRam.match(/(\d+)/)
@@ -54,6 +57,9 @@ export const filterLaptops = (laptops, filters) => {
 
     // Filter by storage type
     if (filters.storageTypes.length > 0) {
+      if (!laptop.specs || !laptop.specs.storage) {
+        return false
+      }
       const laptopStorage = laptop.specs.storage.toLowerCase()
       const matchesStorage = filters.storageTypes.some((storageFilter) => {
         // Check if storage type matches (SSD, HDD, etc.)
@@ -128,16 +134,18 @@ export const getFilterOptions = (laptops) => {
     }
   }
 
-  const brands = [...new Set(laptops.map(l => l.brand))].sort()
+  const brands = [...new Set(laptops.map(l => l.brand).filter(Boolean))].sort()
   
   // Extract RAM sizes (e.g., "16GB" -> "16")
   const ramSizes = [...new Set(laptops.map(l => {
+    if (!l.specs || !l.specs.ram) return null
     const ramMatch = l.specs.ram.match(/(\d+)/)
     return ramMatch ? ramMatch[1] : null
   }).filter(Boolean))].sort((a, b) => parseInt(a) - parseInt(b))
   
   // Extract storage types (SSD, HDD, etc.)
   const storageTypes = [...new Set(laptops.map(l => {
+    if (!l.specs || !l.specs.storage) return null
     const storage = l.specs.storage.toLowerCase()
     if (storage.includes('ssd')) return 'SSD'
     if (storage.includes('hdd')) return 'HDD'

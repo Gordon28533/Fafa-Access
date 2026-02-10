@@ -4,7 +4,6 @@ import { useAuth } from '../hooks/useAuth'
 import StockBadge from '../components/laptop/StockBadge'
 import PaymentBreakdown from '../components/laptop/PaymentBreakdown'
 import ApplyModal from '../components/apply/ApplyModal'
-import { createLaptopService } from '../services/laptopService'
 import { isAvailable, isLaptopAvailable } from '../utils/stockUtils'
 
 /**
@@ -35,9 +34,16 @@ const LaptopDetails = ({ laptopId = null }) => {
           return
         }
 
-        const laptopService = createLaptopService(authFetch)
-        const response = await laptopService.getActiveLaptops()
-        const laptops = response.data?.laptops || []
+        // Fetch laptops - works for both authenticated and unauthenticated users
+        // Public endpoint shows only active laptops
+        const response = await fetch('/api/laptops')
+        
+        if (!response.ok) {
+          throw new Error('Failed to fetch laptops')
+        }
+        
+        const data = await response.json()
+        const laptops = data.data?.laptops || []
 
         const found = laptops.find((item) => String(item.id) === String(resolvedId))
         if (!found) {
@@ -57,7 +63,7 @@ const LaptopDetails = ({ laptopId = null }) => {
     }
 
     fetchLaptop()
-  }, [routeId, laptopId, isAuthenticated, authFetch])
+  }, [routeId, laptopId])
 
   if (loading) {
     return (

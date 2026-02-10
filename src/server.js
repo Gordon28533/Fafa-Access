@@ -93,7 +93,7 @@ const globalLimiter = rateLimit({
 
 const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,
-  max: 5,
+  max: 15, // Increased from 5 to 15 to prevent legitimate use cases from being blocked
   skipSuccessfulRequests: true,
   message: 'Too many authentication attempts, please try again later.',
 });

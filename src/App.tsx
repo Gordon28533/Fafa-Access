@@ -1,4 +1,4 @@
-import { Routes, Route, Navigate } from 'react-router-dom'
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom'
 import Layout from './layouts/Layout'
 import LaptopCatalog from './pages/LaptopCatalog'
 import LaptopDetails from './pages/LaptopDetails'
@@ -39,6 +39,14 @@ const FullPageLoader = ({ message = 'Loading...' }) => (
   </div>
 )
 
+const RoleRouteLayout = ({ allowedRoles }) => (
+  <ProtectedRoute allowedRoles={allowedRoles}>
+    <Layout>
+      <Outlet />
+    </Layout>
+  </ProtectedRoute>
+)
+
 function App() {
   const { loading } = useAuth()
 
@@ -71,164 +79,47 @@ function App() {
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
         
         {/* Protected Routes - STUDENT */}
-        <Route 
-          path="/dashboard" 
-          element={
-            <ProtectedRoute allowedRoles={["STUDENT"]}>
-              <Layout><StudentDashboard /></Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/profile" 
-          element={
-            <ProtectedRoute allowedRoles={["STUDENT"]}>
-              <Layout><StudentProfile /></Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/security" 
-          element={
-            <ProtectedRoute allowedRoles={["STUDENT"]}>
-              <Layout><StudentSecuritySettings /></Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/notifications" 
-          element={
-            <ProtectedRoute allowedRoles={["STUDENT"]}>
-              <Layout><NotificationPreferences /></Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/support" 
-          element={
-            <ProtectedRoute allowedRoles={["STUDENT"]}>
-              <Layout><SupportTickets /></Layout>
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path="/application/:applicationId" 
+        <Route element={<RoleRouteLayout allowedRoles={["STUDENT"]} />}>
+          <Route path="/dashboard" element={<StudentDashboard />} />
+          <Route path="/profile" element={<StudentProfile />} />
+          <Route path="/security" element={<StudentSecuritySettings />} />
+          <Route path="/notifications" element={<NotificationPreferences />} />
+          <Route path="/support" element={<SupportTickets />} />
+          <Route path="/settings" element={<Navigate to="/profile" replace />} />
+          <Route path="/applications" element={<Navigate to="/dashboard" replace />} />
+        </Route>
+
+        <Route
+          path="/application/:applicationId"
           element={
             <ProtectedRoute allowedRoles={["STUDENT", "SRC", "ADMIN"]}>
               <ApplicationDetailPage />
             </ProtectedRoute>
           }
         />
-        <Route
-          path="/settings"
-          element={
-            <ProtectedRoute allowedRoles={["STUDENT"]}>
-              <Navigate to="/profile" replace />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/applications"
-          element={
-            <ProtectedRoute allowedRoles={["STUDENT"]}>
-              <Navigate to="/dashboard" replace />
-            </ProtectedRoute>
-          }
-        />
-        
+
         {/* Protected Routes - SRC */}
-        <Route 
-          path="/src/dashboard" 
-          element={
-            <ProtectedRoute allowedRoles={["SRC"]}>
-              <Layout><SRCDashboard /></Layout>
-            </ProtectedRoute>
-          } 
-        />
-        
+        <Route element={<RoleRouteLayout allowedRoles={["SRC"]} />}>
+          <Route path="/src/dashboard" element={<SRCDashboard />} />
+        </Route>
+
         {/* Protected Routes - ADMIN */}
-        <Route 
-          path="/admin" 
-          element={
-            <ProtectedRoute allowedRoles={["ADMIN"]}>
-              <Layout><AdminDashboard /></Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route 
-          path="/admin/inventory" 
-          element={
-            <ProtectedRoute allowedRoles={["ADMIN"]}>
-              <Layout><LaptopInventoryPage /></Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route 
-          path="/admin/audit-logs" 
-          element={
-            <ProtectedRoute allowedRoles={["ADMIN"]}>
-              <Layout><AdminAuditLogViewer /></Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route 
-          path="/admin/analytics" 
-          element={
-            <ProtectedRoute allowedRoles={["ADMIN"]}>
-              <Layout><AdminAnalyticsDashboard /></Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route 
-          path="/admin/universities" 
-          element={
-            <ProtectedRoute allowedRoles={["ADMIN"]}>
-              <Layout><AdminUniversityManagement /></Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route 
-          path="/admin/src-invitations" 
-          element={
-            <ProtectedRoute allowedRoles={["ADMIN"]}>
-              <Layout><AdminSRCInvitations /></Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route 
-          path="/admin/payments" 
-          element={
-            <ProtectedRoute allowedRoles={["ADMIN"]}>
-              <Layout><AdminPaymentDashboard /></Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route 
-          path="/admin/payments/:paymentId" 
-          element={
-            <ProtectedRoute allowedRoles={["ADMIN"]}>
-              <Layout><AdminPaymentDetail /></Layout>
-            </ProtectedRoute>
-          }
-        />
-        <Route 
-          path="/admin/product-management" 
-          element={
-            <ProtectedRoute allowedRoles={["ADMIN"]}>
-              <Layout><AdminProductManagement /></Layout>
-            </ProtectedRoute>
-          }
-        />
-        
+        <Route element={<RoleRouteLayout allowedRoles={["ADMIN"]} />}>
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/inventory" element={<LaptopInventoryPage />} />
+          <Route path="/admin/audit-logs" element={<AdminAuditLogViewer />} />
+          <Route path="/admin/analytics" element={<AdminAnalyticsDashboard />} />
+          <Route path="/admin/universities" element={<AdminUniversityManagement />} />
+          <Route path="/admin/src-invitations" element={<AdminSRCInvitations />} />
+          <Route path="/admin/payments" element={<AdminPaymentDashboard />} />
+          <Route path="/admin/payments/:paymentId" element={<AdminPaymentDetail />} />
+          <Route path="/admin/product-management" element={<AdminProductManagement />} />
+        </Route>
+
         {/* Protected Routes - DELIVERY */}
-        <Route 
-          path="/delivery/queue" 
-          element={
-            <ProtectedRoute allowedRoles={["DELIVERY"]}>
-              <Layout><DeliveryQueue /></Layout>
-            </ProtectedRoute>
-          }
-        />
+        <Route element={<RoleRouteLayout allowedRoles={["DELIVERY"]} />}>
+          <Route path="/delivery/queue" element={<DeliveryQueue />} />
+        </Route>
         
         {/* Catch-all: 404 Not Found */}
         <Route path="*" element={<NotFoundPage />} />

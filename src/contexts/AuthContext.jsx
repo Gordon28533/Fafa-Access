@@ -13,6 +13,7 @@ export function AuthProvider({ children }) {
   // Access token stored in a ref (in-memory, non-persistent)
   const accessTokenRef = useRef(null);
   const navigateRef = useRef(navigate);
+  const hasAttemptedRefresh = useRef(false); // Prevent duplicate refresh on mount
 
   useEffect(() => {
     navigateRef.current = navigate;
@@ -38,6 +39,13 @@ export function AuthProvider({ children }) {
         method: 'POST',
         credentials: 'include',
       });
+
+      // Handle rate limiting (429) specifically
+      if (response.status === 429) {
+        console.warn('[AuthContext] Rate limit hit on refresh. Please wait before retrying.');
+        setLoading(false);
+        return null;
+      }
 
       if (!response.ok) {
         // If user was logged in, treat as expiration; otherwise just finish loading quietly
@@ -117,9 +125,12 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     // Try to refresh token on mount (only once)
-    refreshToken().catch(() => {
-      setLoading(false);
-    });
+    if (!hasAttemptedRefresh.current) {
+      hasAttemptedRefresh.current = true;
+      refreshToken().catch(() => {
+        setLoading(false);
+      });
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -192,6 +203,12 @@ export function AuthProvider({ children }) {
       body: JSON.stringify({ email, password }),
       credentials: 'include', // Include cookies for refresh token
     });
+
+    // Handle rate limiting (429) specifically
+    if (response.status === 429) {
+      const text = await response.text();
+      throw new Error(text || 'Too many login attempts. Please try again later.');
+    }
 
     // Check if response has content before parsing JSON
     const contentLength = response.headers.get('content-length');
