@@ -75,7 +75,7 @@ if ($LASTEXITCODE -eq 0) {
     Write-Host ""
     Write-Host "Creating database Fafa_Access..." -ForegroundColor Cyan
     
-    & $psql -U postgres -h localhost -c "CREATE DATABASE Fafa_Access;" 2>$null
+    & $psql -U postgres -h localhost -c "CREATE DATABASE fafa_access;" 2>$null
     if ($LASTEXITCODE -eq 0) {
         Write-Host "Database created!" -ForegroundColor Green
     } else {
@@ -85,7 +85,7 @@ if ($LASTEXITCODE -eq 0) {
     
     Write-Host ""
     Write-Host "=== Setup Complete ===" -ForegroundColor Green
-    Write-Host "Database: Fafa_Access" -ForegroundColor Cyan
+    Write-Host "Database: fafa_access" -ForegroundColor Cyan
     Write-Host "User: postgres" -ForegroundColor Cyan
     Write-Host "Password: Gordon28" -ForegroundColor Cyan
     Write-Host "Host: localhost" -ForegroundColor Cyan

@@ -103,12 +103,12 @@ set PGPASSWORD=Gordon28
 if %ERRORLEVEL% EQU 0 (
     echo SUCCESS: Connected with password Gordon28
     echo.
-    echo Creating database Fafa_Access...
-    "%PG_BIN%\psql.exe" -U postgres -h localhost -c "CREATE DATABASE \"Fafa_Access\";" 2>nul
+    echo Creating database fafa_access...
+    "%PG_BIN%\psql.exe" -U postgres -h localhost -c "CREATE DATABASE fafa_access;" 2>nul
     echo.
     echo === All Done ===
     echo Password: Gordon28
-    echo Database: Fafa_Access
+    echo Database: fafa_access
     echo Host: localhost
     echo Port: 5432
     echo.

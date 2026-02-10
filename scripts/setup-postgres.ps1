@@ -3,7 +3,7 @@
 
 param(
   [string]$Version = "16",
-  [string]$DbName = "Fafa_Access",
+  [string]$DbName = "fafa_access",
   [string]$Password = "Gordon28"
 )
 

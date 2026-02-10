@@ -47,12 +47,14 @@ This guide will walk you through deploying your Student Laptop Access Platform t
 1. Go to https://render.com
 2. Sign up with GitHub
 3. Click **New** → **PostgreSQL**
-4. Name: `laptop-platform-db`
-5. Database: `laptop_app`
-6. User: `laptop_admin`
+4. Name: `fafa-access-db` (keep it hyphenated for Render)
+5. Database: `fafa_access` (⚠️ **must be lowercase with underscores only**)
+6. User: `fafa_admin`
 7. Region: Choose closest to Ghana (e.g., Frankfurt)
 8. Click **Create Database**
 9. **Copy the External Database URL** (starts with `postgres://`)
+
+**⚠️ Important:** Database name must match pattern: `^[a-z_][a-z0-9_]*$` (lowercase, underscores, no uppercase or hyphens)
 
 ### Alternative: Supabase (Free PostgreSQL)
 1. Go to https://supabase.com

@@ -91,6 +91,6 @@ if ($testResult.TcpTestSucceeded) {
 Write-Host ""
 Write-Host "=== Connection String ===" -ForegroundColor Cyan
 Write-Host "Current .env setting:" -ForegroundColor Yellow
-Write-Host "DATABASE_URL=postgresql://postgres:Gordon28@localhost:5432/Fafa_Access"
+Write-Host "DATABASE_URL=postgresql://postgres:Gordon28@localhost:5432/fafa_access"
 Write-Host ""
 Write-Host "If using remote server, change localhost to your server hostname/IP" -ForegroundColor Yellow

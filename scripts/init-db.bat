@@ -54,7 +54,7 @@ if %ERRORLEVEL% EQU 0 (
     
     REM Create database
     echo Creating database Fafa_Access...
-    "%PGBIN%\psql.exe" -U postgres -h localhost -c "CREATE DATABASE \"Fafa_Access\";" 2>nul
+    "%PGBIN%\psql.exe" -U postgres -h localhost -c "CREATE DATABASE fafa_access;" 2>nul
     if %ERRORLEVEL% EQU 0 (
         echo Database created successfully!
     ) else (
@@ -65,7 +65,7 @@ if %ERRORLEVEL% EQU 0 (
     
     echo.
     echo === Setup Complete ===
-    echo Database: Fafa_Access
+    echo Database: fafa_access
     echo User: postgres
     echo Password: Gordon28
     echo Host: localhost
