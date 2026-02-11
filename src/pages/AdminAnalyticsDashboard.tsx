@@ -30,16 +30,16 @@ export default function AdminAnalyticsDashboard() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [days, setDays] = useState(30);
-  const [overview, setOverview] = useState(null as any);
-  const [trends, setTrends] = useState(null as any);
-  const [reviewTimes, setReviewTimes] = useState(null as any);
-  const [payments, setPayments] = useState(null as any);
-  const [deliveries, setDeliveries] = useState(null as any);
-  const [universities, setUniversities] = useState(null as any);
-  const [srcAccountability, setSrcAccountability] = useState(null as any);
-  const [financial, setFinancial] = useState(null as any);
-  const [deliveryPerformance, setDeliveryPerformance] = useState(null as any);
-  const [error, setError] = useState(null as any);
+  const [overview, setOverview] = useState<Record<string, unknown> | null>(null);
+  const [trends, setTrends] = useState<Record<string, unknown> | null>(null);
+  const [reviewTimes, setReviewTimes] = useState<Record<string, unknown> | null>(null);
+  const [payments, setPayments] = useState<Record<string, unknown> | null>(null);
+  const [deliveries, setDeliveries] = useState<Record<string, unknown> | null>(null);
+  const [universities, setUniversities] = useState<Record<string, unknown> | null>(null);
+  const [srcAccountability, setSrcAccountability] = useState<Record<string, unknown> | null>(null);
+  const [financial, setFinancial] = useState<Record<string, unknown> | null>(null);
+  const [deliveryPerformance, setDeliveryPerformance] = useState<Record<string, unknown> | null>(null);
+  const [error, setError] = useState<string | null>(null);
   const [showExportModal, setShowExportModal] = useState(false);
 
   // Redirect non-admin users

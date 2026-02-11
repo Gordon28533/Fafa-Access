@@ -10,14 +10,16 @@ import { useState } from 'react'
  * @param {Array} props.universities - Available universities for filtering
  */
 
+interface Filters {
+  universities: string[]
+  brands: string[]
+  ramSizes: string[]
+  storageSizes: string[]
+}
+
 interface FilterSidebarProps {
-  filters: {
-    universities: string[]
-    brands: string[]
-    ramSizes: string[]
-    storageSizes: string[]
-  }
-  onFilterChange: (filters: any) => void
+  filters: Filters
+  onFilterChange: (filters: Filters) => void
   universities: string[]
 }
 

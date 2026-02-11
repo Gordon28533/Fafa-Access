@@ -5,7 +5,7 @@
  * Features filtering by actor, role, action, and date range.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import '../styles/audit-log.css';
 
 interface AuditLog {
@@ -47,7 +47,7 @@ const AuditLogViewer: React.FC = () => {
   const [expandedLogId, setExpandedLogId] = useState<string | null>(null);
 
   // Fetch audit logs
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -75,12 +75,12 @@ const AuditLogViewer: React.FC = () => {
       const data = await response.json();
       setLogs(data.data || []);
       setTotalPages(Math.ceil((data.total || 0) / limit));
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch audit logs');
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Failed to fetch audit logs');
     } finally {
       setLoading(false);
     }
-  };
+  }, [actorId, actorRole, action, startDate, endDate, applicationId, currentPage, limit]);
 
   // Fetch audit log statistics
   const fetchStats = async () => {
@@ -106,7 +106,7 @@ const AuditLogViewer: React.FC = () => {
   useEffect(() => {
     fetchLogs();
     fetchStats();
-  }, [currentPage]);
+  }, [currentPage, fetchLogs]);
 
   // Handle filter change
   const handleFilterChange = () => {

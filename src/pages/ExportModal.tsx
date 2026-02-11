@@ -205,7 +205,7 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => {
             <select
               id="export-type"
               value={exportType}
-              onChange={(e) => setExportType(e.target.value as any)}
+              onChange={(e) => setExportType(e.target.value as 'applications' | 'payments' | 'deliveries' | 'analytics' | 'comprehensive')}
               disabled={loading}
             >
               <option value="applications">Applications</option>
@@ -225,7 +225,7 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => {
             <select
               id="format"
               value={format}
-              onChange={(e) => setFormat(e.target.value as any)}
+              onChange={(e) => setFormat(e.target.value as 'csv' | 'json' | 'pdf')}
               disabled={loading || exportType === 'analytics' || exportType === 'comprehensive'}
             >
               {getFormatOptions().map((option) => (
