@@ -208,6 +208,7 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => {
             <select
               id="export-type"
               value={exportType}
+              onChange={(e) => setExportType(e.target.value as 'applications' | 'payments' | 'deliveries' | 'analytics' | 'comprehensive')}
               onChange={(e) => setExportType(e.target.value as ExportType)}
               disabled={loading}
             >
@@ -228,6 +229,7 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => {
             <select
               id="format"
               value={format}
+              onChange={(e) => setFormat(e.target.value as 'csv' | 'json' | 'pdf')}
               onChange={(e) => setFormat(e.target.value as ExportFormat)}
               disabled={loading || exportType === 'analytics' || exportType === 'comprehensive'}
             >

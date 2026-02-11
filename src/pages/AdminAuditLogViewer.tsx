@@ -75,6 +75,12 @@ const AuditLogViewer: React.FC = () => {
       const data = await response.json();
       setLogs(data.data || []);
       setTotalPages(Math.ceil((data.total || 0) / limit));
+    } catch (err: unknown) {
+      setError((err as Error).message || 'Failed to fetch audit logs');
+    } finally {
+      setLoading(false);
+    }
+  }, [actorId, actorRole, action, startDate, endDate, applicationId, currentPage, limit]);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch audit logs');
     } finally {
@@ -106,6 +112,7 @@ const AuditLogViewer: React.FC = () => {
   useEffect(() => {
     fetchLogs();
     fetchStats();
+  }, [currentPage, fetchLogs, fetchStats]);
   }, [fetchLogs, fetchStats]);
 
   // Handle filter change
