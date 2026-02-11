@@ -106,7 +106,7 @@ const AuditLogViewer: React.FC = () => {
   useEffect(() => {
     fetchLogs();
     fetchStats();
-  }, [fetchLogs, fetchStats]);
+  }, []);
 
   // Handle filter change
   const handleFilterChange = () => {
