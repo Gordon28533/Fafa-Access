@@ -5,7 +5,7 @@
  * Features filtering by actor, role, action, and date range.
  */
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import '../styles/audit-log.css';
 
 interface AuditLog {
@@ -47,7 +47,7 @@ const AuditLogViewer: React.FC = () => {
   const [expandedLogId, setExpandedLogId] = useState<string | null>(null);
 
   // Fetch audit logs
-  const fetchLogs = async () => {
+  const fetchLogs = useCallback(async () => {
     setLoading(true);
     setError(null);
 
@@ -75,15 +75,15 @@ const AuditLogViewer: React.FC = () => {
       const data = await response.json();
       setLogs(data.data || []);
       setTotalPages(Math.ceil((data.total || 0) / limit));
-    } catch (err: any) {
-      setError(err.message || 'Failed to fetch audit logs');
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to fetch audit logs');
     } finally {
       setLoading(false);
     }
-  };
+  }, [actorId, actorRole, action, startDate, endDate, applicationId, limit, currentPage]);
 
   // Fetch audit log statistics
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       const response = await fetch('/api/admin/audit-logs/stats', {
         headers: {
@@ -100,13 +100,13 @@ const AuditLogViewer: React.FC = () => {
     } catch (err) {
       console.error('Failed to fetch audit log stats:', err);
     }
-  };
+  }, []);
 
   // Initial load
   useEffect(() => {
     fetchLogs();
     fetchStats();
-  }, [currentPage]);
+  }, [fetchLogs, fetchStats]);
 
   // Handle filter change
   const handleFilterChange = () => {

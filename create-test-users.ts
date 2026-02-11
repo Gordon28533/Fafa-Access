@@ -7,7 +7,6 @@ import process from 'process';
 import bcrypt from 'bcrypt';
 import { db } from './src/db/connection.ts';
 import { users } from './src/db/schema/users.ts';
-import { studentProfiles, srcOfficers } from './src/db/schema/universities.ts';
 import { eq } from 'drizzle-orm';
 
 async function setupTestUsers() {

@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { X, Download, Filter, Calendar } from 'lucide-react';
 import '../styles/export-modal.css';
 
+type ExportType = 'applications' | 'payments' | 'deliveries' | 'analytics' | 'comprehensive';
+type ExportFormat = 'csv' | 'json' | 'pdf';
+
 interface University {
   id: string;
   name: string;
@@ -13,8 +16,8 @@ interface ExportModalProps {
 }
 
 const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => {
-  const [exportType, setExportType] = useState<'applications' | 'payments' | 'deliveries' | 'analytics' | 'comprehensive'>('applications');
-  const [format, setFormat] = useState<'csv' | 'json' | 'pdf'>('csv');
+  const [exportType, setExportType] = useState<ExportType>('applications');
+  const [format, setFormat] = useState<ExportFormat>('csv');
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [universityId, setUniversityId] = useState('');
@@ -205,7 +208,7 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => {
             <select
               id="export-type"
               value={exportType}
-              onChange={(e) => setExportType(e.target.value as any)}
+              onChange={(e) => setExportType(e.target.value as ExportType)}
               disabled={loading}
             >
               <option value="applications">Applications</option>
@@ -225,7 +228,7 @@ const ExportModal: React.FC<ExportModalProps> = ({ isOpen, onClose }) => {
             <select
               id="format"
               value={format}
-              onChange={(e) => setFormat(e.target.value as any)}
+              onChange={(e) => setFormat(e.target.value as ExportFormat)}
               disabled={loading || exportType === 'analytics' || exportType === 'comprehensive'}
             >
               {getFormatOptions().map((option) => (
