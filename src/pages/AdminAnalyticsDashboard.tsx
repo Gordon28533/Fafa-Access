@@ -36,6 +36,11 @@ export default function AdminAnalyticsDashboard() {
   const [payments, setPayments] = useState<Record<string, unknown> | null>(null);
   const [deliveries, setDeliveries] = useState<Record<string, unknown> | null>(null);
   const [universities, setUniversities] = useState<Record<string, unknown>[] | null>(null);
+  const [trends, setTrends] = useState<Record<string, unknown> | null>(null);
+  const [reviewTimes, setReviewTimes] = useState<Record<string, unknown> | null>(null);
+  const [payments, setPayments] = useState<Record<string, unknown> | null>(null);
+  const [deliveries, setDeliveries] = useState<Record<string, unknown> | null>(null);
+  const [universities, setUniversities] = useState<Record<string, unknown> | null>(null);
   const [srcAccountability, setSrcAccountability] = useState<Record<string, unknown> | null>(null);
   const [financial, setFinancial] = useState<Record<string, unknown> | null>(null);
   const [deliveryPerformance, setDeliveryPerformance] = useState<Record<string, unknown> | null>(null);

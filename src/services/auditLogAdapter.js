@@ -10,7 +10,7 @@ import {
   logAdminDecision,
   logDeliveryConfirmation,
   logPaymentConfirmation
-} from './auditLogService.js';
+} from './AuditLogService.js';
 
 export const auditLogService = {
   /**
