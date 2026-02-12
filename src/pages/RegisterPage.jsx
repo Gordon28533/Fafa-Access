@@ -34,7 +34,7 @@ export default function RegisterPage() {
       newErrors.email = 'Email is required';
     } else if (formData.email.length > 254) {
       newErrors.email = 'Email is too long';
-    } else if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
+    } else if (!/^[a-zA-Z0-9._\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/.test(formData.email)) {
       newErrors.email = 'Email is invalid';
     }
 

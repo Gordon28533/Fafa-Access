@@ -73,7 +73,8 @@ class SRCInviteService {
       
       // Use safer regex without catastrophic backtracking
       // This pattern is more specific and avoids nested quantifiers
-      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+      // Hyphens are escaped to avoid any ambiguity
+      const emailRegex = /^[a-zA-Z0-9._\-]+@[a-zA-Z0-9.\-]+\.[a-zA-Z]{2,}$/;
       if (!emailRegex.test(data.email)) {
         throw new Error('VALIDATION_ERROR: Invalid email format');
       }
