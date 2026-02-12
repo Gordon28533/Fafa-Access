@@ -25,25 +25,88 @@ import '../styles/src-accountability.css';
 import '../styles/financial-analytics.css';
 import '../styles/delivery-analytics.css';
 
+// Analytics data type definitions
+interface OverviewData {
+  applications: {
+    total: number;
+    approvalRate: string;
+    rejectionRate: string;
+  };
+  payments: {
+    total: number;
+    completionRate: string;
+  };
+  deliveries: {
+    completed: number;
+    total: number;
+    completionRate: string;
+  };
+}
+
+interface TrendDataPoint {
+  date: string;
+  approved?: number;
+  pending?: number;
+  rejected?: number;
+  completed?: number;
+  collected?: number;
+  verified?: number;
+  failed?: number;
+}
+
+interface ReviewTimeData {
+  srcReview: {
+    averageDays: number;
+    averageHours: number;
+    applicationsReviewed: number;
+  };
+  adminReview: {
+    averageDays: number;
+    averageHours: number;
+    applicationsReviewed: number;
+  };
+}
+
+interface PaymentData {
+  trends: TrendDataPoint[];
+  summary: {
+    collected: { amount: number; percentage: string };
+    verified: { amount: number; percentage: string };
+    pending: { amount: number; percentage: string };
+    failed: { amount: number; percentage: string };
+  };
+}
+
+interface DeliveryData {
+  trends: TrendDataPoint[];
+}
+
+interface SrcAccountabilityData {
+  data: unknown;
+  summary: unknown;
+}
+
+interface FinancialData {
+  summary: unknown;
+  unpaidDeliveries: unknown;
+  revenueByUniversity: unknown;
+  revenueByProduct: unknown;
+}
+
 export default function AdminAnalyticsDashboard() {
   const { user, authFetch } = useAuth();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [days, setDays] = useState(30);
-  const [overview, setOverview] = useState<Record<string, unknown> | null>(null);
-  const [trends, setTrends] = useState<Record<string, unknown>[] | null>(null);
-  const [reviewTimes, setReviewTimes] = useState<Record<string, unknown> | null>(null);
-  const [payments, setPayments] = useState<Record<string, unknown> | null>(null);
-  const [deliveries, setDeliveries] = useState<Record<string, unknown> | null>(null);
-  const [universities, setUniversities] = useState<Record<string, unknown>[] | null>(null);
-  const [trends, setTrends] = useState<Record<string, unknown> | null>(null);
-  const [reviewTimes, setReviewTimes] = useState<Record<string, unknown> | null>(null);
-  const [payments, setPayments] = useState<Record<string, unknown> | null>(null);
-  const [deliveries, setDeliveries] = useState<Record<string, unknown> | null>(null);
-  const [universities, setUniversities] = useState<Record<string, unknown> | null>(null);
-  const [srcAccountability, setSrcAccountability] = useState<Record<string, unknown> | null>(null);
-  const [financial, setFinancial] = useState<Record<string, unknown> | null>(null);
-  const [deliveryPerformance, setDeliveryPerformance] = useState<Record<string, unknown> | null>(null);
+  const [overview, setOverview] = useState<OverviewData | null>(null);
+  const [trends, setTrends] = useState<TrendDataPoint[] | null>(null);
+  const [reviewTimes, setReviewTimes] = useState<ReviewTimeData | null>(null);
+  const [payments, setPayments] = useState<PaymentData | null>(null);
+  const [deliveries, setDeliveries] = useState<DeliveryData | null>(null);
+  const [universities, setUniversities] = useState<unknown[] | null>(null);
+  const [srcAccountability, setSrcAccountability] = useState<SrcAccountabilityData | null>(null);
+  const [financial, setFinancial] = useState<FinancialData | null>(null);
+  const [deliveryPerformance, setDeliveryPerformance] = useState<unknown | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [showExportModal, setShowExportModal] = useState(false);
 
