@@ -29,6 +29,7 @@ import srcAcceptanceRoutes from './routes/srcAcceptanceRoutes.js';
 import srcRevenueRoutes from './routes/srcRevenueRoutes.js';
 import commissionRoutes from './routes/commissionRoutes.js';
 import adminNotificationRoutes from './routes/adminNotificationRoutes.js';
+import adminCommissionRoutes from './routes/adminCommissionRoutes.js';
 import exportRoutes from './routes/exportRoutes.js';
 
 dotenv.config();
@@ -373,6 +374,8 @@ app.use('/api/src/revenue', apiLimiter, srcRevenueRoutes);
 app.use('/api/commissions', apiLimiter, commissionRoutes);
 // Admin notification management routes
 app.use('/api/admin/notifications', apiLimiter, adminNotificationRoutes);
+// Admin commission management routes
+app.use('/api/admin/commission', apiLimiter, adminCommissionRoutes);
 
 // 404 handler (must be last)
 app.use((req, res) => {
