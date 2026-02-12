@@ -1,6 +1,12 @@
 /**
  * Test User Setup Script
  * Creates test users for all roles to facilitate manual testing
+ * 
+ * SECURITY NOTE: Test user passwords are defined in this script (lines 17-42)
+ * but are NOT logged to console to prevent clear-text password exposure.
+ * 
+ * To view test credentials: Check the testUsers array in this file's source code.
+ * Default test password for all users: TestPass123!
  */
 
 import process from 'process';
@@ -71,14 +77,15 @@ async function setupTestUsers() {
         .returning();
 
       console.log(`✅ ${testUser.role}: ${testUser.email}`);
-      console.log(`   Password: ${testUser.password}`);
+      console.log(`   Password: ********** (see source code for test credentials)`);
       console.log(`   ID: ${newUser.id}\n`);
     }
 
     console.log('\n✨ Test users created successfully!\n');
-    console.log('Login with any of these credentials:\n');
+    console.log('Login with these test accounts:\n');
+    console.log('Note: All test users have the same password (see source code for credentials)\n');
     testUsers.forEach(u => {
-      console.log(`${u.role.padEnd(10)} | Email: ${u.email.padEnd(20)} | Password: ${u.password}`);
+      console.log(`${u.role.padEnd(10)} | Email: ${u.email.padEnd(20)} | Password: **********`);
     });
 
   } catch (error) {
