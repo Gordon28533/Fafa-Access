@@ -66,7 +66,14 @@ class SRCInviteService {
       }
 
       // Validate email format
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      // Add length check to prevent ReDoS attacks
+      if (data.email.length > 254) {
+        throw new Error('VALIDATION_ERROR: Email too long');
+      }
+      
+      // Use safer regex without catastrophic backtracking
+      // This pattern is more specific and avoids nested quantifiers
+      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (!emailRegex.test(data.email)) {
         throw new Error('VALIDATION_ERROR: Invalid email format');
       }
