@@ -11,6 +11,7 @@
  */
 
 import { Router } from 'express';
+import rateLimit from 'express-rate-limit';
 import { db } from '../db/connection.js';
 import { payments } from '../db/schema/index.js';
 import { eq } from 'drizzle-orm';
@@ -31,6 +32,15 @@ import { authenticate } from '../middleware/auth.js';
 import { logPayment } from '../utils/auditLogger.js';
 
 const router = Router();
+
+// Webhook rate limiter - higher limits for external service webhooks
+const webhookLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000, // 1 minute window
+  max: process.env.NODE_ENV === 'production' ? 100 : 200, // Higher limits for webhook traffic
+  message: 'Webhook rate limit exceeded.',
+  standardHeaders: true,
+  legacyHeaders: false,
+});
 
 /**
  * POST /api/payments/initialize
@@ -359,7 +369,7 @@ router.get('/application/:applicationId', authenticate, async (req, res) => {
  * Paystack webhook for payment confirmation
  * Verifies webhook signature and updates payment status
  */
-router.post('/webhook', async (req, res) => {
+router.post('/webhook', webhookLimiter, async (req, res) => {
   try {
     // Verify webhook signature
     const signature = req.headers['x-paystack-signature'];

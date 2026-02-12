@@ -125,6 +125,13 @@ const apiLimiter = rateLimit({
   message: 'API rate limit exceeded.',
 });
 
+// Webhook rate limiter - higher limits for external service webhooks
+const webhookLimiter = rateLimit({
+  windowMs: 1 * 60 * 1000,
+  max: NODE_ENV === 'production' ? 100 : 200,
+  message: 'Webhook rate limit exceeded.',
+});
+
 app.use(globalLimiter);
 
 // 4. Input sanitization: Strip $ and . from keys to prevent NoSQL injection
