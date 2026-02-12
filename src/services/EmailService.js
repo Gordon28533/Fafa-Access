@@ -3,6 +3,7 @@
 // Email delivery with HTML + plain-text fallback and pluggable providers (SMTP or transactional)
 
 import { EventEmitter } from 'events';
+import crypto from 'crypto';
 
 class EmailProvider {
   async send() {
@@ -52,7 +53,8 @@ class SmtpProvider extends EmailProvider {
     }
 
     console.log(`[SMTP-SIM] To: ${to} | Subject: ${subject}`);
-    return { messageId: `smtp-sim-${Date.now()}-${Math.random().toString(16).slice(2)}`, provider: 'smtp' };
+    const randomBytes = crypto.randomBytes(8).toString('hex');
+    return { messageId: `smtp-sim-${Date.now()}-${randomBytes}`, provider: 'smtp' };
   }
 }
 
@@ -87,7 +89,8 @@ class SendGridProvider extends EmailProvider {
       const err = new Error(`SendGrid send failed: ${reason}`);
       throw err;
     }
-    return { messageId: `sg-${Date.now()}-${Math.random().toString(16).slice(2)}`, provider: 'sendgrid' };
+    const randomBytes = crypto.randomBytes(8).toString('hex');
+    return { messageId: `sg-${Date.now()}-${randomBytes}`, provider: 'sendgrid' };
   }
 }
 

@@ -1,5 +1,6 @@
 // NotificationService.js
 // Event-driven notification orchestrator with channel fallbacks, retry, preferences, and delivery tracking
+import crypto from 'crypto';
 import notificationTemplates, { renderChannelTemplate } from './notificationTemplates';
 import SMSService from './SMSService';
 import WhatsAppService from './WhatsAppService';
@@ -238,7 +239,15 @@ function isCritical(eventName, metadata) {
 
 const dedupeCache = new Map();
 
-const safeId = () => (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `evt-${Date.now()}-${Math.random().toString(16).slice(2)}`);
+const safeId = () => {
+  // Use crypto.randomUUID for secure random ID generation
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // Fallback for environments without crypto.randomUUID (use randomBytes instead of Math.random)
+  const randomBytes = crypto.randomBytes(8).toString('hex');
+  return `evt-${Date.now()}-${randomBytes}`;
+};
 
 function storageAvailable() {
   return typeof localStorage !== 'undefined';

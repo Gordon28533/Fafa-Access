@@ -2,6 +2,7 @@
 // WhatsApp Business API service with template sending, SMS fallback, and delivery status hooks
 
 import { EventEmitter } from 'events';
+import crypto from 'crypto';
 import { renderChannelTemplate } from './notificationTemplates';
 
 class WhatsAppProvider {
@@ -63,8 +64,9 @@ class MetaBusinessProvider extends WhatsAppProvider {
       throw err;
     }
 
+    const randomBytes = crypto.randomBytes(8).toString('hex');
     return {
-      messageId: data?.messages?.[0]?.id || `wa-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      messageId: data?.messages?.[0]?.id || `wa-${Date.now()}-${randomBytes}`,
       provider: 'meta',
       raw: data,
     };

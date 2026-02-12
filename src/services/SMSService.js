@@ -3,6 +3,7 @@
 // Provider-agnostic SMS service with queue, rate limiting, and delivery callbacks
 
 import { EventEmitter } from 'events';
+import crypto from 'crypto';
 
 // ---- Provider Abstractions ----
 class SmsProvider {
@@ -25,7 +26,8 @@ class TwilioProvider extends SmsProvider {
   }
   async send({ to, senderId }) {
     // TODO: integrate Twilio REST API. Return { messageId, provider: 'twilio' }
-    const msgId = `twilio-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const randomBytes = crypto.randomBytes(8).toString('hex');
+    const msgId = `twilio-${Date.now()}-${randomBytes}`;
     return { messageId: msgId, provider: 'twilio', to, from: senderId || this.from };
   }
   parseStatusCallback(payload) {
@@ -46,7 +48,8 @@ class HubtelProvider extends SmsProvider {
   }
   async send({ to, senderId }) {
     // TODO: integrate Hubtel SMS API. Return { messageId, provider: 'hubtel' }
-    const msgId = `hubtel-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const randomBytes = crypto.randomBytes(8).toString('hex');
+    const msgId = `hubtel-${Date.now()}-${randomBytes}`;
     return { messageId: msgId, provider: 'hubtel', to, from: senderId || this.from };
   }
   parseStatusCallback(payload) {
@@ -67,7 +70,8 @@ class AfricasTalkingProvider extends SmsProvider {
   }
   async send({ to, senderId }) {
     // TODO: integrate Africa's Talking SMS API. Return { messageId, provider: 'africastalking' }
-    const msgId = `at-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const randomBytes = crypto.randomBytes(8).toString('hex');
+    const msgId = `at-${Date.now()}-${randomBytes}`;
     return { messageId: msgId, provider: 'africastalking', to, from: senderId || this.from };
   }
   parseStatusCallback(payload) {
@@ -176,7 +180,8 @@ class SMSService extends EventEmitter {
 
   sendSms({ to, message, senderId }) {
     if (!to || !message) throw new Error('to and message are required');
-    const messageId = `sms-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const randomBytes = crypto.randomBytes(8).toString('hex');
+    const messageId = `sms-${Date.now()}-${randomBytes}`;
     const payload = { to, message, senderId, messageId };
     this.queue.enqueue(payload);
     return { enqueued: true, messageId };

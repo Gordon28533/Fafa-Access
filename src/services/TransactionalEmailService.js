@@ -12,6 +12,7 @@
 
 import process from 'process';
 import { EventEmitter } from 'events';
+import crypto from 'crypto';
 import { db } from '../db/connection.js';
 import { auditLogs } from '../db/schema/index.js';
 import { logEmailSend, logEmailAudit } from './emailLogging.js';
@@ -80,8 +81,9 @@ class SmtpProvider extends EmailProvider {
 
   _simulateSend(to, subject) {
     console.log(`[SMTP-SIMULATION] Email to ${to}: ${subject}`);
+    const randomBytes = crypto.randomBytes(8).toString('hex');
     return {
-      messageId: `smtp-sim-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      messageId: `smtp-sim-${Date.now()}-${randomBytes}`,
       provider: 'smtp',
       status: 'sent',
       timestamp: new Date().toISOString(),
@@ -129,8 +131,9 @@ class SendGridProvider extends EmailProvider {
       throw new Error(`SendGrid failed (${response.status}): ${reason}`);
     }
 
+    const randomBytes = crypto.randomBytes(8).toString('hex');
     return {
-      messageId: `sg-${Date.now()}-${Math.random().toString(16).slice(2)}`,
+      messageId: `sg-${Date.now()}-${randomBytes}`,
       provider: 'sendgrid',
       status: 'sent',
       timestamp: new Date().toISOString(),
@@ -772,10 +775,11 @@ class TransactionalEmailService extends EventEmitter {
   }
 
   /**
-   * Utility: generate correlation ID
+   * Utility: generate correlation ID using cryptographically secure random
    */
   _generateId() {
-    return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
+    const randomBytes = crypto.randomBytes(8).toString('hex');
+    return `${Date.now()}-${randomBytes}`;
   }
 
   /**
