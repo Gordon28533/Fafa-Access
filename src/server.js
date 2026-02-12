@@ -11,7 +11,7 @@ import { httpLogger, initSentry, observabilityErrorHandler, logger } from './obs
 import { validateEnvironment, validateProductionConfig, getEnvConfig } from './utils/validateEnv.js';
 import authRoutes from './routes/authRoutes.js';
 import deliveryRoutes from './routes/deliveryRoutes.js';
-import paymentsRoutes from './routes/paymentsRoutes.js';
+import paymentController from './controllers/paymentController.js';
 import documentRoutes from './routes/documentRoutes.js';
 import applicationRoutes from './routes/applicationRoutes.js';
 import studentProfileRoutes from './routes/studentProfileRoutes.js';
@@ -355,8 +355,8 @@ app.use('/api/notifications', apiLimiter, notificationPreferencesRoutes);
 app.use('/api/support', apiLimiter, supportRoutes);
 // Delivery routes
 app.use('/api/delivery', apiLimiter, deliveryRoutes);
-// Payments routes
-app.use('/api/payments', apiLimiter, paymentsRoutes);
+// Payments routes (full payment controller with Paystack integration)
+app.use('/api/payments', apiLimiter, paymentController);
 // Document routes
 app.use('/api/documents', apiLimiter, documentRoutes);
 // Admin audit log routes
