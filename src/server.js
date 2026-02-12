@@ -1,6 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 import cookieParser from 'cookie-parser';
+import csrf from 'csurf';
 import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import process from 'process';
@@ -154,6 +155,41 @@ if (NODE_ENV === 'production' && !cookieSecret) {
   throw new Error('COOKIE_SECRET is required in production');
 }
 app.use(cookieParser(cookieSecret || 'dev-secret'));
+
+// 7. CSRF Protection
+// Configure CSRF protection to use cookies
+const csrfProtection = csrf({ 
+  cookie: {
+    httpOnly: true,
+    secure: NODE_ENV === 'production', // Only use secure cookies in production
+    sameSite: 'strict'
+  }
+});
+
+// Apply CSRF protection to state-changing routes
+// Exclude specific routes that don't need CSRF (like health checks, token refresh)
+app.use((req, res, next) => {
+  // Skip CSRF for:
+  // 1. GET, HEAD, OPTIONS requests (safe methods)
+  // 2. Health check endpoint
+  // 3. Token refresh endpoint (already has token validation)
+  const skipCsrf = 
+    ['GET', 'HEAD', 'OPTIONS'].includes(req.method) ||
+    req.path === '/health' ||
+    req.path === '/api/auth/refresh';
+  
+  if (skipCsrf) {
+    return next();
+  }
+  
+  // Apply CSRF protection to all other routes
+  csrfProtection(req, res, next);
+});
+
+// Endpoint to get CSRF token for frontend
+app.get('/api/csrf-token', csrfProtection, (req, res) => {
+  res.json({ csrfToken: req.csrfToken() });
+});
 
 // Observability wiring
 initSentry(app);
