@@ -41,7 +41,16 @@ async function createUniversity(req, res) {
     }
 
     // Validate email format
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // Add length check to prevent ReDoS attacks
+    if (email.length > 254) {
+      return res.status(400).json({
+        error: 'INVALID_EMAIL',
+        message: 'Email address is too long'
+      });
+    }
+    
+    // Use safer regex without catastrophic backtracking
+    const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
     if (!emailRegex.test(email)) {
       return res.status(400).json({
         error: 'INVALID_EMAIL',
@@ -222,7 +231,16 @@ async function updateUniversity(req, res) {
 
     // Validate email if provided
     if (email) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      // Add length check to prevent ReDoS attacks
+      if (email.length > 254) {
+        return res.status(400).json({
+          error: 'INVALID_EMAIL',
+          message: 'Email address is too long'
+        });
+      }
+      
+      // Use safer regex without catastrophic backtracking
+      const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
       if (!emailRegex.test(email)) {
         return res.status(400).json({
           error: 'INVALID_EMAIL',

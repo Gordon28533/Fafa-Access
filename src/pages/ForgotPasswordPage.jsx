@@ -18,7 +18,12 @@ export default function ForgotPasswordPage() {
       return;
     }
 
-    if (!/\S+@\S+\.\S+/.test(email)) {
+    if (email.length > 254) {
+      setError('Email is too long');
+      return;
+    }
+
+    if (!/^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
       setError('Email is invalid');
       return;
     }
