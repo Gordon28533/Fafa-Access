@@ -27,6 +27,7 @@ import adminSRCRoutes from './routes/adminSRCRoutes.js';
 import adminAnalyticsRoutes from './routes/adminAnalyticsRoutes.js';
 import srcAcceptanceRoutes from './routes/srcAcceptanceRoutes.js';
 import srcRevenueRoutes from './routes/srcRevenueRoutes.js';
+import commissionRoutes from './routes/commissionRoutes.js';
 import exportRoutes from './routes/exportRoutes.js';
 
 dotenv.config();
@@ -367,6 +368,8 @@ app.use('/api/admin/src', apiLimiter, adminSRCRoutes);
 app.use('/api/src', apiLimiter, srcAcceptanceRoutes);
 // SRC revenue and commission tracking routes
 app.use('/api/src/revenue', apiLimiter, srcRevenueRoutes);
+// Commission management routes
+app.use('/api/commissions', apiLimiter, commissionRoutes);
 
 // 404 handler (must be last)
 app.use((req, res) => {
