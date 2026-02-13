@@ -10,6 +10,9 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  build: {
+    chunkSizeWarningLimit: 1000, // Increase chunk size warning limit to 1000 kB
+  },
   server: {
     port: 5173,
     strictPort: true, // fail fast if 5173 is taken; avoids fallback to 5174 which breaks cookies
