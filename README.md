@@ -66,7 +66,7 @@ src/
 
 ### Environment Configuration
 ```
-├─ .env              # Environment variables (DO NOT push to GitHub - already in .gitignore)
+├─ .env              # Environment variables (gitignored - never pushed to GitHub)
 ├─ .env.example      # Template for environment variables
 └─ .env.production   # Production environment template
 ```
