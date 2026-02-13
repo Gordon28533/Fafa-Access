@@ -9,9 +9,8 @@ on:
       - main
 
 permissions:
-  contents: write
+  contents: read
   pull-requests: write
-  issues: write
 
 jobs:
   build-and-deploy:
@@ -36,5 +35,5 @@ jobs:
         run: npm run build
         
       - name: Run linter
-        run: npm run lint || true
+        run: npm run lint
         continue-on-error: true
