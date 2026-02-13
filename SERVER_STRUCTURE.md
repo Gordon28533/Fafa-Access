@@ -24,7 +24,7 @@ The project has all required server components:
 ├── .env.example              # Environment variables template
 └── src/
     ├── server.js             # Express server entry point
-    ├── routes/               # API route definitions
+    ├── routes/               # API route definitions (22 files)
     │   ├── adminAnalyticsRoutes.js
     │   ├── adminAuditLogRoutes.js
     │   ├── adminCommissionRoutes.js
@@ -32,20 +32,21 @@ The project has all required server components:
     │   ├── adminPaymentRoutes.js
     │   ├── adminSRCRoutes.js
     │   └── adminUniversityRoutes.js
-    ├── controllers/          # Request handlers
+    │   └── ... (and 15 more)
+    ├── controllers/          # Request handlers (24 files)
     │   ├── applicationController.js
     │   ├── authController.js
     │   ├── paymentController.js
     │   ├── commissionController.js
     │   ├── laptopController.js
-    │   └── ... (24 controllers total)
-    ├── services/             # Business logic services
+    │   └── ... (and 19 more)
+    ├── services/             # Business logic services (31 files)
     │   ├── EmailService.js
     │   ├── NotificationService.js
     │   ├── PaystackService.js
     │   ├── applicationService.js
     │   ├── authService.js
-    │   └── ... (27 services total)
+    │   └── ... (and 26 more)
     ├── middleware/           # Express middleware
     │   ├── auth.js
     │   ├── roleAuth.js

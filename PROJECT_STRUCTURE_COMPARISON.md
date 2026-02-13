@@ -30,7 +30,12 @@
       │   ├── adminNotificationRoutes.js
       │   ├── adminPaymentRoutes.js
       │   ├── adminSRCRoutes.js
-      │   └── adminUniversityRoutes.js
+      │   ├── adminUniversityRoutes.js
+      │   ├── authRoutes.js
+      │   ├── applicationRoutes.js
+      │   ├── deliveryRoutes.js
+      │   ├── paymentsRoutes.js
+      │   └── ... (22 route files total)
       ├── controllers/ ✅
       │   ├── adminAnalyticsController.js
       │   ├── applicationController.js
@@ -38,7 +43,7 @@
       │   ├── commissionController.js
       │   ├── paymentController.js
       │   ├── laptopController.js
-      │   └── ... (24 controllers total)
+      │   └── ... (24 controller files total)
       └── services/ ✅
           ├── EmailService.js
           ├── NotificationService.js
@@ -46,7 +51,7 @@
           ├── TransactionalEmailService.js
           ├── applicationService.js
           ├── authService.js
-          └── ... (27 services total)
+          └── ... (31 service files total)
 ```
 
 ## Comparison Table
@@ -55,9 +60,9 @@
 |-------------------|------------------|-----------------|---------|
 | package.json | `/server/package.json` | `/package.json` (root) | ✅ Present |
 | Server entry | `/server/index.js` or `/server/server.js` | `/src/server.js` | ✅ Present |
-| Routes directory | `/server/routes/` | `/src/routes/` | ✅ Present (7 route files) |
-| Controllers directory | `/server/controllers/` | `/src/controllers/` | ✅ Present (24 controllers) |
-| Services directory | `/server/services/` | `/src/services/` | ✅ Present (27 services) |
+| Routes directory | `/server/routes/` | `/src/routes/` | ✅ Present (22 route files) |
+| Controllers directory | `/server/controllers/` | `/src/controllers/` | ✅ Present (24 controller files) |
+| Services directory | `/server/services/` | `/src/services/` | ✅ Present (31 service files) |
 | Environment file | `/server/.env` | `/.env` (root, gitignored) | ✅ Present & Protected |
 
 ## Key Differences

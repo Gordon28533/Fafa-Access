@@ -55,9 +55,9 @@ src/
 ```
 src/
  ├─ server.js           # Backend server entry point
- ├─ routes/            # API route definitions
- ├─ controllers/       # Request handlers and business logic
- ├─ services/          # Business logic and external integrations
+ ├─ routes/            # API route definitions (22 files)
+ ├─ controllers/       # Request handlers and business logic (24 files)
+ ├─ services/          # Business logic and external integrations (31 files)
  ├─ middleware/        # Express middleware (auth, validation, etc.)
  ├─ db/               # Database configuration and schemas (Drizzle ORM)
  ├─ email-templates/  # Email template files
