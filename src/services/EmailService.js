@@ -106,14 +106,16 @@ function stripHtml(html = '') {
   text = text.replace(/<[^>]+>/g, '');
   
   // Decode common HTML entities
+  // IMPORTANT: &amp; must be replaced LAST to prevent incomplete sanitization
+  // If &amp; is replaced first, &amp;lt; becomes &lt; then <, allowing injection
   text = text
     .replace(/&nbsp;/g, ' ')
-    .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
-    .replace(/&apos;/g, "'");
+    .replace(/&apos;/g, "'")
+    .replace(/&amp;/g, '&');  // Must be last!
   
   // Normalize whitespace
   text = text.replace(/\s+/g, ' ').trim();
