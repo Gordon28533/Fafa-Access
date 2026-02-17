@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Application Decision</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      color: #1f2937;
+      line-height: 1.6;
+      background-color: #f3f4f6;
+    }
+    .wrapper { background-color: #f3f4f6; padding: 20px; }
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      background-color: #ffffff;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    .header {
+      background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+    }
+    .header h1 {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+    .header p {
+      font-size: 14px;
+      opacity: 0.95;
+      font-weight: 400;
+    }
+    .content {
+      padding: 40px 30px;
+    }
+    .greeting {
+      font-size: 16px;
+      margin-bottom: 20px;
+      color: #374151;
+    }
+    .intro-text {
+      font-size: 15px;
+      color: #6b7280;
+      margin-bottom: 25px;
+      line-height: 1.7;
+    }
+    .status-box {
+      background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+      border-left: 4px solid #ef4444;
+      padding: 20px;
+      margin: 25px 0;
+      border-radius: 4px;
+    }
+    .status-item {
+      display: flex;
+      padding: 8px 0;
+      font-size: 14px;
+    }
+    .status-label {
+      font-weight: 600;
+      color: #1f2937;
+      min-width: 160px;
+    }
+    .status-value {
+      color: #4b5563;
+    }
+    .section {
+      margin: 25px 0;
+    }
+    .section h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1f2937;
+      margin-bottom: 12px;
+    }
+    .section p {
+      font-size: 14px;
+      color: #6b7280;
+      line-height: 1.7;
+      margin-bottom: 10px;
+    }
+    .cta-button {
+      display: inline-block;
+      background: linear-gradient(135deg, #6b7280 0%, #4b5563 100%);
+      color: white;
+      padding: 12px 32px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+      margin: 20px 0;
+      text-align: center;
+      transition: opacity 0.3s ease;
+    }
+    .cta-button:hover {
+      opacity: 0.9;
+    }
+    .reason-box {
+      background: #fef2f2;
+      padding: 15px;
+      border-radius: 6px;
+      margin: 15px 0;
+      border-left: 4px solid #dc2626;
+    }
+    .reason-label {
+      display: block;
+      font-weight: 600;
+      color: #991b1b;
+      margin-bottom: 8px;
+      font-size: 13px;
+    }
+    .reason-text {
+      color: #7f1d1d;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .next-steps {
+      background: #f0fdf4;
+      border-left: 4px solid #10b981;
+      padding: 15px;
+      border-radius: 4px;
+      margin: 20px 0;
+    }
+    .next-steps h3 {
+      color: #047857;
+      margin-top: 0;
+    }
+    .next-steps p {
+      color: #166534;
+      font-size: 14px;
+      margin-bottom: 8px;
+    }
+    .divider {
+      height: 1px;
+      background-color: #e5e7eb;
+      margin: 30px 0;
+    }
+    .footer {
+      background-color: #f9fafb;
+      padding: 30px;
+      text-align: center;
+      border-top: 1px solid #e5e7eb;
+    }
+    .footer-text {
+      font-size: 12px;
+      color: #9ca3af;
+      line-height: 1.6;
+      margin: 10px 0;
+    }
+    .footer-links {
+      font-size: 12px;
+      margin-top: 15px;
+    }
+    .footer-links a {
+      color: #6b7280;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+    .footer-links a:hover {
+      text-decoration: underline;
+    }
+    @media (max-width: 600px) {
+      .wrapper { padding: 0; }
+      .container { border-radius: 0; }
+      .header { padding: 30px 20px; }
+      .header h1 { font-size: 24px; }
+      .content { padding: 30px 20px; }
+      .footer { padding: 20px; }
+      .status-item { flex-direction: column; }
+      .status-label { min-width: auto; margin-bottom: 4px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>Application Decision</h1>
+        <p>We have reviewed your laptop application</p>
+      </div>
+
+      <!-- Content -->
+      <div class="content">
+        <p class="greeting">Dear {{name}},</p>
+        
+        <p class="intro-text">
+          Thank you for submitting your laptop application. We have completed our review and must inform you that your application was not approved at this time.
+        </p>
+
+        <!-- Status Box -->
+        <div class="status-box">
+          <div class="status-item">
+            <span class="status-label">Application Reference:</span>
+            <span class="status-value"><strong>{{applicationRef}}</strong></span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Decision Date:</span>
+            <span class="status-value">{{decisionDate}}</span>
+          </div>
+          <div class="status-item">
+            <span class="status-label">Decision:</span>
+            <span class="status-value"><strong style="color: #991b1b;">Not Approved</strong></span>
+          </div>
+        </div>
+
+        <!-- Reason Section -->
+        <div class="section">
+          <h3>Decision Reason</h3>
+          <div class="reason-box">
+            <span class="reason-label">Reason for Decision:</span>
+            <div class="reason-text">{{rejectionReason}}</div>
+          </div>
+        </div>
+
+        <!-- Appeal Section -->
+        <div class="section">
+          <h3>Next Steps</h3>
+          <div class="next-steps">
+            <h3>What You Can Do</h3>
+            <p><strong>1. Request Clarification:</strong> If you would like more detailed information about the decision, please contact the Student Representative Council (SRC) or Admin office.</p>
+            <p><strong>2. Appeal the Decision:</strong> You may be eligible to appeal this decision. Appeals must be submitted within 10 days. Review the appeal process and submit an appeal if you believe there was an error.</p>
+            <p><strong>3. Apply Again:</strong> You may be eligible to reapply in the next application cycle. Please review the application requirements before reapplying.</p>
+            <p style="margin-bottom: 0;"><strong>4. Contact Support:</strong> Our support team can help clarify requirements and discuss your options.</p>
+          </div>
+        </div>
+
+        <!-- Important Section -->
+        <div class="section" style="background-color: #fef3c7; border-left: 4px solid #f59e0b; padding: 15px; border-radius: 4px;">
+          <h3 style="color: #92400e; margin-top: 0;">Important Information</h3>
+          <p style="margin-bottom: 8px;">
+            This decision does not reflect your academic abilities or worth as a student. Many factors go into our approval process, and we encourage you to explore other support resources available to you.
+          </p>
+        </div>
+
+        <!-- Resources Section -->
+        <div class="section">
+          <h3>Additional Resources</h3>
+          <p>We have several resources and support programs available:</p>
+          <ul style="margin-left: 20px; color: #6b7280; font-size: 14px;">
+            <li>Student Support Services</li>
+            <li>Financial Aid Office</li>
+            <li>Academic Support Programs</li>
+            <li>University Scholarship Opportunities</li>
+          </ul>
+        </div>
+
+        <div class="divider"></div>
+
+        <!-- Support Section -->
+        <div class="section">
+          <p style="font-size: 14px; color: #6b7280; text-align: center;">
+            If you have questions about this decision or need further assistance, please reach out to our support team.
+          </p>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="footer">
+        <p class="footer-text">
+          <strong>Fafa Access - Student Laptop Distribution Program</strong>
+        </p>
+        <p class="footer-text">
+          We appreciate your interest in our program and wish you success in your academic endeavors.
+        </p>
+        <div class="footer-links">
+          <a href="https://fafaaccess.edu.gh/appeals">Submit Appeal</a>
+          <a href="https://fafaaccess.edu.gh/help">Help Center</a>
+          <a href="https://fafaaccess.edu.gh/contact">Contact Support</a>
+        </div>
+        <p class="footer-text">
+          © 2026 Fafa Access. All rights reserved.
+        </p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

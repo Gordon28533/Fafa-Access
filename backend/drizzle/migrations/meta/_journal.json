@@ -1,0 +1,34 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1769011384821,
+      "tag": "0000_woozy_harry_osborn",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1769083620006,
+      "tag": "0001_misty_donald_blake",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1769187600000,
+      "tag": "0002_student_profile_settings",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1769188800000,
+      "tag": "0003_student_profile_academic",
+      "breakpoints": true
+    }
+  ]
+}

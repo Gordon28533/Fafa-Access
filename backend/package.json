@@ -1,0 +1,48 @@
+{
+  "name": "fafa-access-backend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "tsx src/server.js",
+    "dev": "tsx --watch src/server.js",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx src/db/migrate.ts",
+    "db:push": "drizzle-kit push",
+    "db:studio": "drizzle-kit studio",
+    "db:drop": "drizzle-kit drop",
+    "db:check": "drizzle-kit check",
+    "db:seed": "tsx src/db/seed.ts"
+  },
+  "dependencies": {
+    "@azure/storage-blob": "^12.30.0",
+    "@json2csv/plainjs": "^7.0.6",
+    "@sentry/node": "^7.114.0",
+    "@supabase/supabase-js": "^2.95.3",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "dd-trace": "^5.85.0",
+    "dotenv": "^17.2.3",
+    "drizzle-orm": "^0.45.1",
+    "express": "^5.2.1",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "jspdf": "^4.1.0",
+    "mongo-sanitize": "^1.1.0",
+    "multer": "^2.0.2",
+    "pg": "^8.17.2",
+    "pino": "^9.3.2",
+    "pino-http": "^9.0.0"
+  },
+  "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cookie-parser": "^1.4.7",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/pg": "^8.16.0",
+    "drizzle-kit": "^0.31.8",
+    "pino-pretty": "^11.2.2",
+    "tsx": "^4.21.0",
+    "typescript": "^5.2.2"
+  }
+}

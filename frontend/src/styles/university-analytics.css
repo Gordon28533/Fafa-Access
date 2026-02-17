@@ -1,0 +1,442 @@
+/* University Performance Panel Styles */
+
+.university-panel {
+  background-color: var(--bg-surface);
+  border-radius: var(--border-radius-md);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  margin-bottom: var(--spacing-2xl);
+}
+
+.university-header {
+  padding: var(--spacing-xl);
+  border-bottom: 1px solid var(--border-color);
+  background: linear-gradient(135deg, var(--color-primary-600) 0%, var(--color-primary-700) 100%);
+  color: var(--text-inverse);
+}
+
+.university-header h3 {
+  margin: 0 0 var(--spacing-lg) 0;
+  font-size: var(--font-size-2xl);
+  font-weight: var(--font-weight-semibold);
+}
+
+.university-controls {
+  display: flex;
+  gap: var(--spacing-lg);
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.control-group {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.control-group label {
+  font-size: var(--font-size-sm);
+  font-weight: var(--font-weight-medium);
+  white-space: nowrap;
+}
+
+.control-group select {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: var(--border-radius-sm);
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-primary);
+  font-size: var(--font-size-sm);
+  cursor: pointer;
+  transition: all var(--transition-base);
+}
+
+.control-group select:hover {
+  background: var(--bg-surface);
+  border-color: var(--border-color);
+}
+
+.result-count {
+  font-size: var(--font-size-sm);
+  opacity: 0.9;
+  white-space: nowrap;
+  margin-left: auto;
+}
+
+.university-table-wrapper {
+  overflow-x: auto;
+  padding: var(--spacing-lg);
+}
+
+.university-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: var(--font-size-sm);
+}
+
+.university-table thead {
+  background-color: var(--bg-surface-secondary);
+}
+
+.university-table thead tr {
+  border-bottom: 2px solid var(--border-color);
+}
+
+.university-table th {
+  padding: var(--spacing-md);
+  text-align: left;
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.university-table tbody tr {
+  border-bottom: 1px solid var(--border-color);
+  transition: background-color var(--transition-base);
+}
+
+.university-table tbody tr:hover {
+  background-color: var(--bg-surface-hover);
+}
+
+.university-row {
+  cursor: pointer;
+}
+
+.university-row:hover {
+  opacity: 0.95;
+}
+
+.university-table td {
+  padding: var(--spacing-lg) var(--spacing-md);
+  vertical-align: middle;
+}
+
+.name-cell {
+  font-weight: var(--font-weight-medium);
+  color: var(--text-primary);
+}
+
+.university-name {
+  display: block;
+  max-width: 250px;
+  word-break: break-word;
+}
+
+.number-cell {
+  text-align: center;
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-600);
+}
+
+.backlog-cell {
+  text-align: center;
+}
+
+.backlog-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.backlog-count {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-error-600);
+}
+
+.backlog-percent {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+}
+
+.rate-cell {
+  text-align: center;
+}
+
+.rate-display {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.rate-value {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-success-600);
+}
+
+.rate-meta {
+  font-size: var(--font-size-xs);
+  color: var(--text-tertiary);
+}
+
+.overall-rate {
+  font-weight: var(--font-weight-semibold);
+  color: var(--color-primary-600);
+}
+
+.progress-cell {
+  text-align: center;
+  min-width: 120px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background-color: var(--bg-surface-secondary);
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+  margin-bottom: var(--spacing-xs);
+}
+
+.progress-fill {
+  height: 100%;
+  transition: width var(--transition-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-inverse);
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-semibold);
+}
+
+.progress-text {
+  font-size: var(--font-size-xs);
+  font-weight: var(--font-weight-medium);
+  color: var(--text-secondary);
+}
+
+.score-cell {
+  text-align: center;
+}
+
+.score-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2px solid;
+  background-color: var(--bg-surface);
+  font-weight: var(--font-weight-bold);
+  font-size: var(--font-size-xl);
+}
+
+.score-value {
+  color: var(--text-primary);
+}
+
+.status-cell {
+  text-align: center;
+}
+
+.tier-badge {
+  display: inline-block;
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--border-radius-full);
+  font-weight: var(--font-weight-semibold);
+  font-size: var(--font-size-xs);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.loading-spinner {
+  padding: var(--spacing-2xl);
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: var(--font-size-lg);
+}
+
+.no-data {
+  padding: var(--spacing-2xl);
+  text-align: center;
+  color: var(--text-tertiary);
+  font-size: var(--font-size-lg);
+}
+
+.university-legend {
+  padding: var(--spacing-xl);
+  background-color: var(--bg-surface-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+.legend-title {
+  font-weight: var(--font-weight-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-lg);
+}
+
+.legend-items {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: var(--spacing-lg);
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+}
+
+.legend-color {
+  width: 16px;
+  height: 16px;
+  border-radius: var(--border-radius-sm);
+  flex-shrink: 0;
+}
+
+.legend-item span {
+  font-size: var(--font-size-sm);
+  color: var(--text-secondary);
+}
+
+/* Responsive Design */
+
+@media (max-width: 1024px) {
+  .university-controls {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .result-count {
+    margin-left: 0;
+  }
+
+  .university-table {
+    font-size: var(--font-size-xs);
+  }
+
+  .university-table th,
+  .university-table td {
+    padding: var(--spacing-sm);
+  }
+
+  .legend-items {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .university-panel {
+    margin-bottom: var(--spacing-xl);
+  }
+
+  .university-header {
+    padding: var(--spacing-lg);
+  }
+
+  .university-header h3 {
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-md);
+  }
+
+  .university-table-wrapper {
+    padding: var(--spacing-md);
+    overflow-x: auto;
+  }
+
+  .university-table {
+    font-size: var(--font-size-xs);
+    min-width: 900px;
+  }
+
+  .university-table th,
+  .university-table td {
+    padding: var(--spacing-sm) var(--spacing-sm);
+  }
+
+  .university-name {
+    max-width: 150px;
+  }
+
+  .score-badge {
+    width: 40px;
+    height: 40px;
+    font-size: var(--font-size-lg);
+  }
+
+  .control-group select {
+    font-size: var(--font-size-xs);
+  }
+
+  .legend-title {
+    font-size: var(--font-size-sm);
+  }
+
+  .legend-items {
+    grid-template-columns: repeat(2, 1fr);
+    gap: var(--spacing-md);
+  }
+
+  .legend-item span {
+    font-size: var(--font-size-xs);
+  }
+}
+
+@media (max-width: 480px) {
+  .university-panel {
+    border-radius: var(--border-radius-sm);
+  }
+
+  .university-header {
+    padding: var(--spacing-md);
+  }
+
+  .university-header h3 {
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-sm);
+  }
+
+  .university-controls {
+    gap: var(--spacing-sm);
+  }
+
+  .control-group {
+    gap: var(--spacing-xs);
+  }
+
+  .control-group label {
+    font-size: var(--font-size-xs);
+  }
+
+  .result-count {
+    font-size: var(--font-size-xs);
+  }
+
+  .university-table-wrapper {
+    padding: var(--spacing-sm);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .university-table {
+    font-size: var(--font-size-xs);
+    min-width: 800px;
+  }
+
+  .university-table th,
+  .university-table td {
+    padding: var(--spacing-xs);
+  }
+
+  .score-badge {
+    width: 35px;
+    height: 35px;
+    font-size: var(--font-size-lg);
+  }
+
+  .tier-badge {
+    padding: var(--spacing-xs) var(--spacing-md);
+    font-size: var(--font-size-xs);
+  }
+
+  .legend-items {
+    grid-template-columns: 1fr;
+    gap: var(--spacing-sm);
+  }
+
+  .legend-item {
+    gap: var(--spacing-sm);
+  }
+}
