@@ -75,6 +75,6 @@ export const dataCache = new DataCache();
 // Cache keys
 export const CACHE_KEYS = {
   LAPTOPS: 'laptops',
-  UNIVERSITIES: 'universities',
-  USER_PROFILE: 'user_profile',
+  UNIVERSITIES: 'universities', // Reserved for future use
+  USER_PROFILE: 'user_profile', // Reserved for future use
 };
