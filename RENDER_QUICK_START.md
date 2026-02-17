@@ -15,6 +15,46 @@ https://<your-backend-service-name>.onrender.com/api
 
 ---
 
+## Architecture Overview
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                     RENDER DEPLOYMENT                     │
+├─────────────────────────────────────────────────────────┤
+│                                                           │
+│  ┌──────────────────┐         ┌───────────────────┐    │
+│  │   PostgreSQL     │◄────────│  Backend Service  │    │
+│  │   Database       │         │  (Express.js)     │    │
+│  │                  │         │                   │    │
+│  │ fafa-access-db   │         │ fafa-access-api   │    │
+│  └──────────────────┘         └─────────▲─────────┘    │
+│                                          │               │
+│                                          │               │
+│                         https://fafa-access-api         │
+│                               .onrender.com/api          │
+│                                          │               │
+│                                          │               │
+│  ┌──────────────────────────────────────┼──────┐       │
+│  │        Frontend Service              │      │       │
+│  │        (React + Vite)                │      │       │
+│  │                                      │      │       │
+│  │  VITE_API_URL=https://fafa-access-api       │       │
+│  │                .onrender.com/api     │      │       │
+│  │                                             │       │
+│  │  fafa-access-frontend                      │       │
+│  └─────────────────────────────────────────────┘       │
+│                                                          │
+│      https://fafa-access-frontend.onrender.com          │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+
+Users access: https://fafa-access-frontend.onrender.com
+Frontend calls: https://fafa-access-api.onrender.com/api
+Backend connects to: PostgreSQL database
+```
+
+---
+
 ## Quick Deployment Steps
 
 ### 1. Deploy Backend (5 minutes)

@@ -11,6 +11,41 @@ The Fafa Access application consists of:
 
 Both the frontend and backend are in the same repository, but will be deployed as separate services on Render.
 
+### Deployment Architecture
+
+```
+┌─────────────────────────────────────────────────────────┐
+│                     RENDER DEPLOYMENT                     │
+├─────────────────────────────────────────────────────────┤
+│                                                           │
+│  ┌──────────────────┐         ┌───────────────────┐    │
+│  │   PostgreSQL     │◄────────│  Backend Service  │    │
+│  │   Database       │         │  (Express.js)     │    │
+│  │                  │         │  - Node runtime   │    │
+│  │ fafa-access-db   │         │  - npm start      │    │
+│  └──────────────────┘         └─────────▲─────────┘    │
+│                                          │               │
+│                         API Base URL:                    │
+│                 https://fafa-access-api.onrender.com/api │
+│                                          │               │
+│  ┌──────────────────────────────────────┼──────┐       │
+│  │        Frontend Service              │      │       │
+│  │        (React + Vite)                │      │       │
+│  │        - Static files in dist/       │      │       │
+│  │        - Served with npx serve       │      │       │
+│  │                                             │       │
+│  │  Environment:                              │       │
+│  │  VITE_API_URL=https://fafa-access-api      │       │
+│  │               .onrender.com/api            │       │
+│  └─────────────────────────────────────────────┘       │
+│                                                          │
+│        https://fafa-access-frontend.onrender.com        │
+│                                                          │
+└──────────────────────────────────────────────────────────┘
+
+Users visit frontend → Frontend calls backend API → Backend queries database
+```
+
 ---
 
 ## Prerequisites
