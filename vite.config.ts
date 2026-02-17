@@ -12,6 +12,21 @@ export default defineConfig({
   },
   build: {
     chunkSizeWarningLimit: 1000, // Increase chunk size warning limit to 1000 kB
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          // Put Recharts (a potentially large dependency) into its own chunk
+          if (id.includes('node_modules/recharts')) {
+            return 'recharts-vendor'
+          }
+
+          // Put all other node_modules into a shared vendor chunk
+          if (id.includes('node_modules')) {
+            return 'vendor'
+          }
+        },
+      },
+    },
   },
   server: {
     port: 5173,
