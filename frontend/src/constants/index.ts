@@ -1,0 +1,28 @@
+// Application status constants
+export const APPLICATION_STATUS = {
+  PENDING_SRC: 'PENDING_SRC',
+  SRC_APPROVED: 'SRC_APPROVED',
+  ADMIN_APPROVED: 'ADMIN_APPROVED',
+  SRC_REJECTED: 'SRC_REJECTED',
+  ADMIN_REJECTED: 'ADMIN_REJECTED',
+  DELIVERY_ASSIGNED: 'DELIVERY_ASSIGNED',
+  DELIVERED: 'DELIVERED',
+  COMPLETED: 'COMPLETED',
+  WITHDRAWN: 'WITHDRAWN'
+}
+
+// Support ticket status constants
+export const TICKET_STATUS = {
+  OPEN: 'OPEN',
+  IN_PROGRESS: 'IN_PROGRESS',
+  RESOLVED: 'RESOLVED',
+  CLOSED: 'CLOSED'
+}
+
+// Support ticket priority constants
+export const TICKET_PRIORITY = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH',
+  URGENT: 'URGENT'
+}
