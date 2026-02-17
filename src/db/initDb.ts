@@ -1,5 +1,5 @@
 import { pool } from './connection.js';
-import fs from 'fs';
+import fs from 'fs/promises';
 import path from 'path';
 
 async function initializeDatabase() {
@@ -20,7 +20,7 @@ async function initializeDatabase() {
       const filePath = path.join(migrationsDir, file);
       console.log(`  Running ${file}...`);
       
-      const sql = fs.readFileSync(filePath, 'utf-8');
+      const sql = await fs.readFile(filePath, 'utf-8');
       
       // Split by statement-breakpoint and filter out empty statements
       const statements = sql

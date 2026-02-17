@@ -50,16 +50,7 @@ export default function AdminPaymentDashboard() {
     limit: 20
   });
 
-  // Fetch payments data
-  useEffect(() => {
-    fetchPayments();
-  }, [filters, pagination.currentPage, fetchPayments]);
-
-  // Fetch summary statistics
-  useEffect(() => {
-    fetchSummary();
-  }, []);
-
+  // Fetch payments data - defined before useEffect to avoid dependency issues
   const fetchPayments = useCallback(async () => {
     try {
       setLoading(true);
@@ -101,6 +92,16 @@ export default function AdminPaymentDashboard() {
       setLoading(false);
     }
   }, [filters, pagination.currentPage, pagination.limit]);
+
+  // Fetch payments data
+  useEffect(() => {
+    fetchPayments();
+  }, [fetchPayments]);
+
+  // Fetch summary statistics
+  useEffect(() => {
+    fetchSummary();
+  }, []);
 
   const fetchSummary = async () => {
     try {

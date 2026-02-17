@@ -59,11 +59,15 @@ router.post('/initialize', authenticate, async (req, res) => {
 
     const app = eligibility.application;
 
-    // STEP 2: Get student email
-    const student = await db.select().from(db.raw(`SELECT email FROM users WHERE id = ?`))
-      .execute(userId);
+    // STEP 2: Get student email using proper query
+    const { users } = await import('../db/schema/index.js');
+    const studentResult = await db
+      .select({ email: users.email })
+      .from(users)
+      .where(eq(users.id, userId))
+      .execute();
 
-    if (!student || student.length === 0) {
+    if (!studentResult || studentResult.length === 0) {
       return res.status(404).json({
         success: false,
         error: 'Student not found',
@@ -71,7 +75,7 @@ router.post('/initialize', authenticate, async (req, res) => {
       });
     }
 
-    const studentEmail = student[0].email;
+    const studentEmail = studentResult[0].email;
 
     // STEP 3: Calculate installment amount
     const totalPrice = parseFloat(app.laptopPrice) || 0;

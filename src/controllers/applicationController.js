@@ -45,16 +45,16 @@ import {
 const generateApplicationReference = async () => {
   const year = new Date().getFullYear();
   
-  // Get count of applications this year
+  // Get count of applications this year using efficient COUNT query
   const yearStart = new Date(year, 0, 1);
   const result = await db
-    .select()
+    .select({ count: count() })
     .from(applications)
     .where(gte(applications.createdAt, yearStart))
     .execute();
   
-  const count = result.length + 1;
-  const reference = `APP-${year}-${String(count).padStart(4, '0')}`;
+  const applicationCount = result[0]?.count || 0;
+  const reference = `APP-${year}-${String(applicationCount + 1).padStart(4, '0')}`;
   
   return reference;
 };
