@@ -81,12 +81,6 @@ const AuditLogViewer: React.FC = () => {
       setLoading(false);
     }
   }, [actorId, actorRole, action, startDate, endDate, applicationId, currentPage, limit]);
-    } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to fetch audit logs');
-    } finally {
-      setLoading(false);
-    }
-  }, [actorId, actorRole, action, startDate, endDate, applicationId, limit, currentPage]);
 
   // Fetch audit log statistics
   const fetchStats = useCallback(async () => {
@@ -113,7 +107,6 @@ const AuditLogViewer: React.FC = () => {
     fetchLogs();
     fetchStats();
   }, [currentPage, fetchLogs, fetchStats]);
-  }, [fetchLogs, fetchStats]);
 
   // Handle filter change
   const handleFilterChange = () => {
