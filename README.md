@@ -1,19 +1,21 @@
-# Fafa Access
+# Fafa Access Backend
 
-A production-ready web application built with React, TypeScript, and Vite.
+A production-ready backend API server built with Express.js, TypeScript, PostgreSQL, and Drizzle ORM. This repository contains the backend services for the Fafa Access application.
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
 - Node.js 18+ and npm/yarn/pnpm
+- PostgreSQL 14+ database
+- Environment variables configured (see `.env.example`)
 
 ### Installation
 
 1. Clone the repository:
 ```bash
-git clone <repository-url>
-cd "New folder"
+git clone https://github.com/Gordon28533/fafa-access-backend.git
+cd fafa-access-backend
 ```
 
 2. Install dependencies:
@@ -26,79 +28,111 @@ npm install
 cp .env.example .env
 ```
 
-4. Start the development server:
+4. Run database migrations:
 ```bash
-npm run dev
+npm run db:migrate
 ```
 
-The application will be available at `http://localhost:5173`
+5. Start the backend server:
+```bash
+npm run server:dev
+```
+
+The API server will be available at `http://localhost:5000`
 
 ## 📁 Project Structure
 
 ```
 src/
- ├─ components/      # Reusable UI components
- ├─ pages/          # Page components
- ├─ layouts/        # Layout components
- ├─ services/       # API and service layer
- ├─ hooks/          # Custom React hooks
- ├─ utils/          # Utility functions
- ├─ styles/          # Global styles and CSS
- ├─ assets/         # Static assets (images, fonts, etc.)
- └─ types/          # TypeScript type definitions
+ ├─ routes/          # API route definitions (22 route files)
+ ├─ controllers/     # Request handlers and business logic (24 controller files)
+ ├─ services/        # Business logic and data access (31 service files)
+ ├─ middleware/      # Express middleware (authentication, authorization, etc.)
+ ├─ db/             # Database configuration and migrations
+ ├─ schemas/        # Database schemas (Drizzle ORM)
+ ├─ utils/          # Utility functions and helpers
+ ├─ email-templates/# Email templates for notifications
+ ├─ types/          # TypeScript type definitions
+ └─ server.js       # Express server entry point
 ```
 
 ## 🛠️ Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
+- `npm run server:dev` - Start backend server with auto-reload
+- `npm run start` - Start backend server (production)
+- `npm run db:migrate` - Run database migrations
+- `npm run db:generate` - Generate database migrations
+- `npm run db:push` - Push schema changes to database
+- `npm run db:studio` - Open Drizzle Studio (database GUI)
+- `npm run db:seed` - Seed database with test data
 - `npm run lint` - Run ESLint
 
-## 🏗️ Build
+## 🏗️ Deployment
 
-To create a production build:
+To deploy the backend server:
 
-```bash
-npm run build
-```
+1. Set up your PostgreSQL database
+2. Configure environment variables (see `.env.example`)
+3. Run database migrations: `npm run db:migrate`
+4. Start the server: `npm run start`
 
-The build output will be in the `dist` folder.
+For detailed deployment instructions, see [DEPLOYMENT_ARCHITECTURE.md](./DEPLOYMENT_ARCHITECTURE.md).
 
 ## 📝 Environment Variables
 
 Create a `.env` file based on `.env.example`:
 
-- `VITE_API_URL` - API base URL
-- `VITE_APP_NAME` - Application name
-- `VITE_APP_VERSION` - Application version
-- `VITE_ENABLE_ANALYTICS` - Enable analytics (true/false)
+- `DATABASE_URL` - PostgreSQL connection string
+- `PORT` - Server port (default: 5000)
+- `JWT_SECRET` - Secret key for JWT token generation
+- `NODE_ENV` - Environment (development/production)
+- `CORS_ORIGIN` - Allowed CORS origins
+- Additional variables for email, storage, payments, etc. (see `.env.example`)
 
 ## 🧩 Tech Stack
 
-- **React 18** - UI library
+- **Express.js 5** - Web framework
 - **TypeScript** - Type safety
-- **Vite** - Build tool and dev server
-- **React Router** - Routing
+- **PostgreSQL** - Database
+- **Drizzle ORM** - Database ORM
+- **JWT** - Authentication
+- **Bcrypt** - Password hashing
+- **Helmet** - Security headers
+- **Express Rate Limit** - Rate limiting
+- **Pino** - Logging
 - **ESLint** - Code linting
 
 ## 📋 Development Guidelines
 
 - Follow TypeScript best practices
-- Use functional components with hooks
-- Keep components small and focused (single responsibility)
-- Place reusable components in `src/components/`
-- Place page-specific components in `src/pages/`
-- Use the API service layer for all HTTP requests
-- Follow the existing folder structure
+- Use async/await for asynchronous operations
+- Implement proper error handling and logging
+- Add authentication middleware to protected routes
+- Use service layer for business logic
+- Keep controllers thin - delegate to services
+- Write database queries using Drizzle ORM
+- Follow RESTful API design principles
+- Document API endpoints with comments
 
 ## 🔧 Configuration Files
 
 - `package.json` - Dependencies and scripts
 - `tsconfig.json` - TypeScript configuration
-- `vite.config.ts` - Vite configuration
+- `drizzle.config.ts` - Drizzle ORM configuration
 - `.eslintrc.cjs` - ESLint configuration
 - `.env.example` - Environment variables template
+
+## 🔗 Related Repositories
+
+- **Frontend Repository**: [Link to frontend repo when available]
+
+## 📚 Documentation
+
+- [Authentication System Design](./AUTHENTICATION_SYSTEM_DESIGN.md)
+- [Authorization Guide](./AUTHORIZATION_ENFORCEMENT_GUIDE.md)
+- [Database Migration Guide](./DATABASE_MIGRATION_GUIDE.md)
+- [Email System Documentation](./EMAIL_SYSTEM_DOCUMENTATION.md)
+- [API Documentation](./DOCUMENTATION_INDEX.md)
 
 ## 📄 License
 
