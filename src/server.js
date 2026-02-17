@@ -53,7 +53,7 @@ if (process.env.NODE_ENV === 'production') {
 
 const config = getEnvConfig();
 const app = express();
-const PORT = config.port;
+const PORT = process.env.PORT || 5000;
 const NODE_ENV = config.nodeEnv;
 const ALLOWED_ORIGINS = [
   'http://localhost:5173',
@@ -361,7 +361,7 @@ app.use((err, req, res, _next) => {
 app.use(observabilityErrorHandler);
 
 const server = app.listen(PORT, () => {
-  logger.info(`Server running on port ${PORT}`);
+  console.log(`Server running on port ${PORT}`);
   if (NODE_ENV !== 'production') {
     logger.info(`Health check: http://localhost:${PORT}/health`);
     logger.info(`Database test: http://localhost:${PORT}/api/test-db`);
