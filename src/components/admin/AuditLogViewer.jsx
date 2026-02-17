@@ -51,7 +51,7 @@ const AuditLogViewer = () => {
   const roles = ['STUDENT', 'SRC', 'ADMIN', 'DELIVERY'];
 
   // Fetch audit logs from backend - memoized with useCallback
-  const fetchLogs = useCallback(async (pageNum = 0) => {
+  const fetchLogs = useCallback(async (pageNum = 0, signal) => {
     try {
       setLoading(true);
       setError(null);
@@ -73,7 +73,8 @@ const AuditLogViewer = () => {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
-        }
+        },
+        signal // Pass abort signal
       });
 
       if (!response.ok) {
@@ -89,6 +90,10 @@ const AuditLogViewer = () => {
         hasMore: data.data.pagination?.hasMore || false
       });
     } catch (err) {
+      // Ignore abort errors
+      if (err.name === 'AbortError') {
+        return;
+      }
       console.error('Error fetching audit logs:', err);
       setError(err.message);
     } finally {
@@ -96,9 +101,14 @@ const AuditLogViewer = () => {
     }
   }, [filters, pagination.limit]);
 
-  // Initial load
+  // Initial load with abort controller
   useEffect(() => {
-    fetchLogs(0);
+    const controller = new AbortController();
+    fetchLogs(0, controller.signal);
+    
+    return () => {
+      controller.abort(); // Cleanup on unmount
+    };
   }, [fetchLogs]);
 
   // Handle filter changes

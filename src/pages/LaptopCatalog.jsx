@@ -11,10 +11,12 @@ import {
   getFilterOptions,
   SORT_OPTIONS 
 } from '../utils/filterUtils'
+import { dataCache, CACHE_KEYS } from '../utils/dataCache'
 
 /**
  * LaptopCatalog Page Component
  * Main page for displaying the laptop catalog with filtering and sorting
+ * Uses in-memory cache to reduce redundant API calls
  */
 const LaptopCatalog = () => {
   const navigate = useNavigate()
@@ -32,6 +34,15 @@ const LaptopCatalog = () => {
       try {
         setLoading(true)
         
+        // Check cache first (5 minute TTL for laptop data)
+        const cachedData = dataCache.get(CACHE_KEYS.LAPTOPS, 5 * 60 * 1000);
+        if (cachedData) {
+          setAllLaptops(cachedData);
+          setLoading(false);
+          setError(null);
+          return;
+        }
+        
         // Fetch laptops - works for both authenticated and unauthenticated users
         // Public endpoint shows only active laptops
         const response = await fetch('/api/laptops')
@@ -41,7 +52,11 @@ const LaptopCatalog = () => {
         }
         
         const data = await response.json()
-        setAllLaptops(data.data?.laptops || [])
+        const laptops = data.data?.laptops || [];
+        
+        // Store in cache
+        dataCache.set(CACHE_KEYS.LAPTOPS, laptops);
+        setAllLaptops(laptops);
         
         setError(null)
       } catch (err) {

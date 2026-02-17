@@ -29,42 +29,45 @@ export async function confirmDelivery(req, res) {
     const applicationId = app.id;
     const amountInitial70 = Number(app.total_price || 0) * 0.7;
 
-    // Update deliveries row (assumes it exists from assignment)
-    await db.execute(sql`
-      UPDATE deliveries
-      SET delivered = ${true},
-          payment_confirmed = ${!!paymentCollected},
-          student_signature_ref = ${receiptRef},
-          confirmed_by = ${req.user?.email || 'delivery_staff'}
-      WHERE application_id = ${applicationId}
-    `);
+    // Use transaction to ensure all updates succeed or rollback
+    await db.transaction(async (tx) => {
+      // Update deliveries row (assumes it exists from assignment)
+      await tx.execute(sql`
+        UPDATE deliveries
+        SET delivered = ${true},
+            payment_confirmed = ${!!paymentCollected},
+            student_signature_ref = ${receiptRef},
+            confirmed_by = ${req.user?.email || 'delivery_staff'}
+        WHERE application_id = ${applicationId}
+      `);
 
-    // Upsert initial 70% payment record
-    await db.execute(sql`
-      INSERT INTO payments (application_id, amount, type, status, collected_by, collected_at)
-      VALUES (${applicationId}, ${amountInitial70}, 'INITIAL_70', ${paymentCollected ? 'COLLECTED' : 'PENDING'}, ${req.user?.email || 'delivery_staff'}, NOW())
-      ON CONFLICT (application_id, type)
-      DO UPDATE SET status = EXCLUDED.status, amount = EXCLUDED.amount, collected_by = EXCLUDED.collected_by, collected_at = EXCLUDED.collected_at
-    `);
+      // Upsert initial 70% payment record
+      await tx.execute(sql`
+        INSERT INTO payments (application_id, amount, type, status, collected_by, collected_at)
+        VALUES (${applicationId}, ${amountInitial70}, 'INITIAL_70', ${paymentCollected ? 'COLLECTED' : 'PENDING'}, ${req.user?.email || 'delivery_staff'}, NOW())
+        ON CONFLICT (application_id, type)
+        DO UPDATE SET status = EXCLUDED.status, amount = EXCLUDED.amount, collected_by = EXCLUDED.collected_by, collected_at = EXCLUDED.collected_at
+      `);
 
-    // Update application status and history
-    await db.execute(sql`
-      UPDATE applications SET status = 'DELIVERED', updated_at = NOW() WHERE id = ${applicationId}
-    `);
+      // Update application status and history
+      await tx.execute(sql`
+        UPDATE applications SET status = 'DELIVERED', updated_at = NOW() WHERE id = ${applicationId}
+      `);
 
-    await db.execute(sql`
-      INSERT INTO application_status_history (application_id, status, changed_by, timestamp)
-      VALUES (${applicationId}, 'DELIVERED', ${req.user?.email || 'delivery_staff'}, NOW())
-    `);
+      await tx.execute(sql`
+        INSERT INTO application_status_history (application_id, status, changed_by, timestamp)
+        VALUES (${applicationId}, 'DELIVERED', ${req.user?.email || 'delivery_staff'}, NOW())
+      `);
 
-    // Create pending FINAL_30 payment record for outstanding balance
-    const amountFinal30 = Number(app.total_price || 0) * 0.3;
-    await db.execute(sql`
-      INSERT INTO payments (application_id, amount, type, status)
-      VALUES (${applicationId}, ${amountFinal30}, 'FINAL_30', 'PENDING')
-      ON CONFLICT (application_id, type)
-      DO NOTHING
-    `);
+      // Create pending FINAL_30 payment record for outstanding balance
+      const amountFinal30 = Number(app.total_price || 0) * 0.3;
+      await tx.execute(sql`
+        INSERT INTO payments (application_id, amount, type, status)
+        VALUES (${applicationId}, ${amountFinal30}, 'FINAL_30', 'PENDING')
+        ON CONFLICT (application_id, type)
+        DO NOTHING
+      `);
+    });
 
     logger.info({ ref, receiptRef, paymentCollected }, 'Delivery confirmed');
 
