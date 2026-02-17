@@ -91,6 +91,15 @@ class SendGridProvider extends EmailProvider {
   }
 }
 
+function escapeHtml(text = '') {
+  return String(text)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;');
+}
+
 function stripHtml(html = '') {
   return html.replace(/<style[^>]*>[\s\S]*?<\/style>/gi, '')
     .replace(/<[^>]+>/g, '')
@@ -99,11 +108,14 @@ function stripHtml(html = '') {
 }
 
 function defaultHtmlShell({ subject, body }) {
+  const escapedSubject = escapeHtml(subject || 'Notification');
+  const escapedBody = escapeHtml(body || '');
+  
   return `<!doctype html>
 <html>
   <head>
     <meta charset="UTF-8" />
-    <title>${subject || 'Notification'}</title>
+    <title>${escapedSubject}</title>
     <style>
       body { font-family: Arial, sans-serif; color: #111827; background: #f9fafb; padding: 16px; }
       .card { background: #ffffff; border: 1px solid #e5e7eb; border-radius: 8px; padding: 16px; }
@@ -114,8 +126,8 @@ function defaultHtmlShell({ subject, body }) {
   </head>
   <body>
     <div class="card">
-      <div class="title">${subject || 'Notification'}</div>
-      <div class="body">${body || ''}</div>
+      <div class="title">${escapedSubject}</div>
+      <div class="body">${escapedBody}</div>
       <div class="footer">This message was sent automatically. Do not reply.</div>
     </div>
   </body>
@@ -169,4 +181,4 @@ class EmailService extends EventEmitter {
 }
 
 export default EmailService;
-export { EmailProvider, SmtpProvider, SendGridProvider, defaultHtmlShell, stripHtml };
+export { EmailProvider, SmtpProvider, SendGridProvider, defaultHtmlShell, stripHtml, escapeHtml };
