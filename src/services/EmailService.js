@@ -92,6 +92,8 @@ class SendGridProvider extends EmailProvider {
 }
 
 function escapeHtml(text = '') {
+  // IMPORTANT: & must be replaced first to prevent double-escaping
+  // of the & in other escape sequences like &lt; &gt; etc.
   return String(text)
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -108,8 +110,8 @@ function stripHtml(html = '') {
 }
 
 function defaultHtmlShell({ subject, body }) {
-  const escapedSubject = escapeHtml(subject || 'Notification');
-  const escapedBody = escapeHtml(body || '');
+  const escapedSubject = escapeHtml(subject) || 'Notification';
+  const escapedBody = escapeHtml(body);
   
   return `<!doctype html>
 <html>
