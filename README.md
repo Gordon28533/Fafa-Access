@@ -4,21 +4,22 @@
 
 A production-ready backend API for laptop access management in Nigerian universities.
 
-> **Note**: Frontend build tools have been removed. Frontend source code exists but is not buildable. See [BACKEND_CLEANUP.md](./BACKEND_CLEANUP.md) for details.
+> **✅ Frontend Code Migrated**: All frontend code has been moved to the [fafa-access-frontend](https://github.com/Gordon28533/fafa-access-frontend) repository. See [FRONTEND_MIGRATION_COMPLETE_GUIDE.md](./FRONTEND_MIGRATION_COMPLETE_GUIDE.md) for migration details.
 
 ---
 
-## 🔍 Backend-Focused Repository
+## 🔍 Backend-Only Repository
 
 **✅ CLEAN BACKEND ARCHITECTURE!** 
 
-This repository now focuses on:
+This repository is now **backend-only**:
 - ✅ **Backend**: Express.js REST API server (`src/server.js`)
 - ✅ **Database**: PostgreSQL with Drizzle ORM
 - ✅ **Full Backend Infrastructure**: 23 routes, 24 controllers, 31+ services
+- ❌ **No Frontend Code**: All frontend code moved to separate repository
 - ❌ **No Frontend Build Tools**: Vite, Tailwind, PostCSS removed
 
-See [BACKEND_CLEANUP.md](./BACKEND_CLEANUP.md) for what was removed and why.
+See [BACKEND_CLEANUP.md](./BACKEND_CLEANUP.md) and [FRONTEND_MIGRATION_COMPLETE_GUIDE.md](./FRONTEND_MIGRATION_COMPLETE_GUIDE.md) for details.
 
 ---
 
@@ -62,7 +63,7 @@ The backend server will start on `http://localhost:5000`
 
 ## 📁 Project Structure
 
-This is a **backend-focused repository**. Frontend source code exists but build tools have been removed.
+This is a **backend-only repository**. All frontend code has been moved to a separate repository.
 
 ```
 src/
@@ -74,13 +75,7 @@ src/
  ├─ db/                # Database layer (Drizzle ORM + PostgreSQL)
  ├─ schemas/           # Database schemas
  ├─ utils/             # Backend utilities
- ├─ email-templates/   # Email templates
- │
- ├─ components/        # Frontend source (not buildable)
- ├─ pages/             # Frontend source (not buildable)
- ├─ layouts/           # Frontend source (not buildable)
- ├─ hooks/             # Frontend source (not buildable)
- └─ styles/            # CSS files (not processed)
+ └─ email-templates/   # Email templates
 ```
 
 ## 🛠️ Available Scripts
