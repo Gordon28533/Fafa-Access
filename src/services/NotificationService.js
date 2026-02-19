@@ -241,13 +241,13 @@ const dedupeCache = new Map();
 const safeId = () => (typeof crypto !== 'undefined' && crypto.randomUUID ? crypto.randomUUID() : `evt-${Date.now()}-${Math.random().toString(16).slice(2)}`);
 
 function storageAvailable() {
-  return typeof localStorage !== 'undefined';
+  return typeof globalThis !== 'undefined' && typeof globalThis.localStorage !== 'undefined';
 }
 
 function readStore(key, fallback) {
   if (!storageAvailable()) return fallback;
   try {
-    const data = localStorage.getItem(key);
+    const data = globalThis.localStorage.getItem(key);
     return data ? JSON.parse(data) : fallback;
   } catch (e) {
     return fallback;
@@ -257,7 +257,7 @@ function readStore(key, fallback) {
 function writeStore(key, value) {
   if (!storageAvailable()) return;
   try {
-    localStorage.setItem(key, JSON.stringify(value));
+    globalThis.localStorage.setItem(key, JSON.stringify(value));
   } catch (e) {
     // Ignore storage failures
   }

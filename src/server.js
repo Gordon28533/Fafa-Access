@@ -31,18 +31,20 @@ dotenv.config();
 
 // Initialize Datadog tracing (optional monitoring)
 if (process.env.DATADOG_ENABLED === 'true') {
-  try {
-    const tracer = require('dd-trace').init({
-      enabled: true,
-      env: process.env.NODE_ENV || 'development',
-      service: process.env.DATADOG_SERVICE || 'laptop-access-api',
-      version: '1.0.0',
-      apiVersion: 'v0.4',
-      logInjection: true
+  import('dd-trace')
+    .then(({ default: ddTrace }) => {
+      ddTrace.init({
+        enabled: true,
+        env: process.env.NODE_ENV || 'development',
+        service: process.env.DATADOG_SERVICE || 'laptop-access-api',
+        version: '1.0.0',
+        apiVersion: 'v0.4',
+        logInjection: true
+      });
+    })
+    .catch((err) => {
+      console.warn('[Server] Datadog initialization failed (optional)', err.message);
     });
-  } catch (err) {
-    console.warn('[Server] Datadog initialization failed (optional)', err.message);
-  }
 }
 
 // Validate environment configuration before proceeding

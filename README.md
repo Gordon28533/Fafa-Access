@@ -1,5 +1,6 @@
 # Fafa Access Backend
 
+Backend API for the Fafa Access platform.
 **This repository contains the Fafa Access Backend** - Express.js REST API for laptop access management.
 
 A production-ready backend API for laptop access management in Nigerian universities.
@@ -23,26 +24,54 @@ See [BACKEND_CLEANUP.md](./BACKEND_CLEANUP.md) and [FRONTEND_MIGRATION_COMPLETE_
 
 ---
 
-## 🚀 Quick Start
+## Tech Stack
 
-### Prerequisites
+- Node.js + Express
+- Drizzle ORM + PostgreSQL
+- TypeScript tooling (`tsx`) for runtime scripts
 
+## Quick Start
 - Node.js 18+ and npm
 - PostgreSQL database
 
-### Installation
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Configure environment:
+   ```bash
+   cp .env.example .env
+   ```
+3. Run API server:
+   ```bash
+   npm run server:dev
+   ```
 
+API default: `http://localhost:3000`
+Health check: `http://localhost:3000/health`
 1. Clone the repository:
 ```bash
 git clone <repository-url>
 cd Fafa-Access
 ```
 
-2. Install dependencies:
-```bash
-npm install
-```
+## Scripts
 
+- `npm run start` - start API server
+- `npm run server:dev` - start API server in watch mode
+- `npm run lint` - run ESLint
+- `npm run db:generate` - generate Drizzle migrations
+- `npm run db:migrate` - apply migrations
+- `npm run db:seed` - seed database
+
+## Project Layout
+
+- `src/server.js` - Express bootstrap
+- `src/routes/` - API routes
+- `src/controllers/` - request handlers
+- `src/services/` - business and integration services
+- `src/db/` - DB connection, schema, migrations
+- `src/middleware/` - auth/security middleware
 3. Set up environment variables:
 ```bash
 cp .env.example .env
@@ -61,8 +90,9 @@ npm run dev
 
 The backend server will start on `http://localhost:5000`
 
-## 📁 Project Structure
+## Notes
 
+This repository is backend-only. Frontend is maintained in a separate repository.
 This is a **backend-only repository**. All frontend code has been moved to a separate repository.
 
 ```

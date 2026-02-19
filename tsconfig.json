@@ -2,6 +2,11 @@
   "compilerOptions": {
     "ignoreDeprecations": "6.0",
     "forceConsistentCasingInFileNames": true,
+    "target": "ES2022",
+    "lib": ["ES2022"],
+    "module": "ESNext",
+    "skipLibCheck": true,
+    "moduleResolution": "bundler",
     "target": "ES2020",
     "useDefineForClassFields": true,
     "lib": ["ES2020"],
@@ -20,13 +25,13 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-
-    /* Path aliases */
+    "types": ["node"],
     "baseUrl": ".",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
+  "include": ["src", "src/**/*.js"]
   "include": ["src/**/*.ts", "src/**/*.js", "*.ts"],
   "exclude": ["node_modules", "dist"]
 }
