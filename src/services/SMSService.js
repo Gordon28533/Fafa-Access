@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 // SMSService.js
 // Provider-agnostic SMS service with queue, rate limiting, and delivery callbacks
 

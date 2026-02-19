@@ -1,105 +1,49 @@
-# Fafa Access
+# Fafa Access Backend
 
-A production-ready web application built with React, TypeScript, and Vite.
+Backend API for the Fafa Access platform.
 
-## 🚀 Quick Start
+## Tech Stack
 
-### Prerequisites
+- Node.js + Express
+- Drizzle ORM + PostgreSQL
+- TypeScript tooling (`tsx`) for runtime scripts
 
-- Node.js 18+ and npm/yarn/pnpm
+## Quick Start
 
-### Installation
+1. Install dependencies:
+   ```bash
+   npm install
+   ```
+2. Configure environment:
+   ```bash
+   cp .env.example .env
+   ```
+3. Run API server:
+   ```bash
+   npm run server:dev
+   ```
 
-1. Clone the repository:
-```bash
-git clone <repository-url>
-cd "New folder"
-```
+API default: `http://localhost:3000`
+Health check: `http://localhost:3000/health`
 
-2. Install dependencies:
-```bash
-npm install
-```
+## Scripts
 
-3. Set up environment variables:
-```bash
-cp .env.example .env
-```
+- `npm run start` - start API server
+- `npm run server:dev` - start API server in watch mode
+- `npm run lint` - run ESLint
+- `npm run db:generate` - generate Drizzle migrations
+- `npm run db:migrate` - apply migrations
+- `npm run db:seed` - seed database
 
-4. Start the development server:
-```bash
-npm run dev
-```
+## Project Layout
 
-The application will be available at `http://localhost:5173`
+- `src/server.js` - Express bootstrap
+- `src/routes/` - API routes
+- `src/controllers/` - request handlers
+- `src/services/` - business and integration services
+- `src/db/` - DB connection, schema, migrations
+- `src/middleware/` - auth/security middleware
 
-## 📁 Project Structure
+## Notes
 
-```
-src/
- ├─ components/      # Reusable UI components
- ├─ pages/          # Page components
- ├─ layouts/        # Layout components
- ├─ services/       # API and service layer
- ├─ hooks/          # Custom React hooks
- ├─ utils/          # Utility functions
- ├─ styles/          # Global styles and CSS
- ├─ assets/         # Static assets (images, fonts, etc.)
- └─ types/          # TypeScript type definitions
-```
-
-## 🛠️ Available Scripts
-
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run preview` - Preview production build
-- `npm run lint` - Run ESLint
-
-## 🏗️ Build
-
-To create a production build:
-
-```bash
-npm run build
-```
-
-The build output will be in the `dist` folder.
-
-## 📝 Environment Variables
-
-Create a `.env` file based on `.env.example`:
-
-- `VITE_API_URL` - API base URL
-- `VITE_APP_NAME` - Application name
-- `VITE_APP_VERSION` - Application version
-- `VITE_ENABLE_ANALYTICS` - Enable analytics (true/false)
-
-## 🧩 Tech Stack
-
-- **React 18** - UI library
-- **TypeScript** - Type safety
-- **Vite** - Build tool and dev server
-- **React Router** - Routing
-- **ESLint** - Code linting
-
-## 📋 Development Guidelines
-
-- Follow TypeScript best practices
-- Use functional components with hooks
-- Keep components small and focused (single responsibility)
-- Place reusable components in `src/components/`
-- Place page-specific components in `src/pages/`
-- Use the API service layer for all HTTP requests
-- Follow the existing folder structure
-
-## 🔧 Configuration Files
-
-- `package.json` - Dependencies and scripts
-- `tsconfig.json` - TypeScript configuration
-- `vite.config.ts` - Vite configuration
-- `.eslintrc.cjs` - ESLint configuration
-- `.env.example` - Environment variables template
-
-## 📄 License
-
-This project is private and proprietary.
+This repository is backend-only. Frontend is maintained in a separate repository.

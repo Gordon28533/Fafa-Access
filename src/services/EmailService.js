@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 // EmailService.js
 // Email delivery with HTML + plain-text fallback and pluggable providers (SMTP or transactional)
 
