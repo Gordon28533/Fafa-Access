@@ -7,20 +7,10 @@
     "module": "ESNext",
     "skipLibCheck": true,
     "moduleResolution": "bundler",
-    "target": "ES2020",
-    "useDefineForClassFields": true,
-    "lib": ["ES2020"],
-    "module": "ESNext",
-    "skipLibCheck": true,
-
-    /* Module resolution */
-    "moduleResolution": "node",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-
-    /* Linting */
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -32,6 +22,4 @@
     }
   },
   "include": ["src", "src/**/*.js"]
-  "include": ["src/**/*.ts", "src/**/*.js", "*.ts"],
-  "exclude": ["node_modules", "dist"]
 }
