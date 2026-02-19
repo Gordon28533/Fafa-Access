@@ -16,7 +16,36 @@ import {
   normalizeGhanaPhone,
   verifyAndRotateRefreshToken,
 } from '../services/authService.js';
+import { sendEmailVerificationEmail, sendPasswordResetEmail } from '../services/emailNotifications.js';
 import { logAuthFailure } from '../observability.js';
+
+const REFRESH_COOKIE_MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
+
+function getFrontendBaseUrl() {
+  return (process.env.FRONTEND_URL || 'http://localhost:5173').replace(/\/+$/, '');
+}
+
+function buildFrontendTokenUrl(path, token) {
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return `${getFrontendBaseUrl()}${normalizedPath}?token=${encodeURIComponent(token)}`;
+}
+
+function getRefreshCookieOptions() {
+  const isProd = process.env.NODE_ENV === 'production';
+  return {
+    httpOnly: true,
+    secure: isProd,
+    sameSite: isProd ? 'none' : 'lax',
+    maxAge: REFRESH_COOKIE_MAX_AGE_MS,
+    path: '/',
+  };
+}
+
+function getRefreshCookieClearOptions() {
+  const clearOptions = getRefreshCookieOptions();
+  delete clearOptions.maxAge;
+  return clearOptions;
+}
 
 // Register new user
 export async function register(req, res) {
@@ -78,8 +107,11 @@ export async function register(req, res) {
       emailVerificationExpiry: verificationExpiry,
     }).returning();
     
-    // TODO: Send verification email
-    // await sendVerificationEmail(newUser[0].email, verificationToken);
+    const verifyUrl = buildFrontendTokenUrl('/verify-email', verificationToken);
+    await sendEmailVerificationEmail(newUser[0].email, {
+      name: newUser[0].fullName,
+      verifyUrl,
+    });
     
     res.status(201).json({
       success: true,
@@ -207,16 +239,8 @@ export async function login(req, res) {
     // Generate tokens
     const accessToken = generateAccessToken(user);
     const refreshToken = await generateRefreshToken(user.id, ipAddress, userAgent);
-    
-    // Set refresh token as httpOnly cookie
-    // Use SameSite=Lax in dev so the cookie is sent from the Vite dev origin (5173 → 3000)
-    const isProd = process.env.NODE_ENV === 'production';
-    res.cookie('refreshToken', refreshToken, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? 'strict' : 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
-    });
+    // Allow cross-site cookie in production for split frontend/backend deployments.
+    res.cookie('refreshToken', refreshToken, getRefreshCookieOptions());
     
     res.json({
       success: true,
@@ -251,13 +275,7 @@ export async function refresh(req, res) {
     const result = await verifyAndRotateRefreshToken(refreshToken, ipAddress, userAgent);
     
     // Set new refresh token cookie
-    const isProd = process.env.NODE_ENV === 'production';
-    res.cookie('refreshToken', result.refreshToken, {
-      httpOnly: true,
-      secure: isProd,
-      sameSite: isProd ? 'strict' : 'lax',
-      maxAge: 7 * 24 * 60 * 60 * 1000,
-    });
+    res.cookie('refreshToken', result.refreshToken, getRefreshCookieOptions());
     
     res.json({
       success: true,
@@ -272,7 +290,7 @@ export async function refresh(req, res) {
     });
   } catch (error) {
     console.error('Token refresh error:', error);
-    res.clearCookie('refreshToken');
+    res.clearCookie('refreshToken', getRefreshCookieClearOptions());
     res.status(401).json({ error: error.message || 'Token refresh failed' });
   }
 }
@@ -289,7 +307,7 @@ export async function logout(req, res) {
         .where(eq(refreshTokens.token, refreshToken));
     }
     
-    res.clearCookie('refreshToken');
+    res.clearCookie('refreshToken', getRefreshCookieClearOptions());
     res.json({ success: true, message: 'Logged out successfully' });
   } catch (error) {
     console.error('Logout error:', error);
@@ -331,8 +349,11 @@ export async function requestPasswordReset(req, res) {
       })
       .where(eq(users.id, user.id));
     
-    // TODO: Send password reset email
-    // await sendPasswordResetEmail(user.email, resetToken);
+    const resetUrl = buildFrontendTokenUrl('/reset-password', resetToken);
+    await sendPasswordResetEmail(user.email, {
+      name: user.fullName,
+      resetUrl,
+    });
     
     res.json({ 
       success: true, 

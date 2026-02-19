@@ -32,6 +32,7 @@
     "jspdf": "^4.1.0",
     "mongo-sanitize": "^1.1.0",
     "multer": "^2.0.2",
+    "nodemailer": "^8.0.1",
     "pg": "^8.17.2",
     "pino": "^9.3.2",
     "pino-http": "^9.0.0",

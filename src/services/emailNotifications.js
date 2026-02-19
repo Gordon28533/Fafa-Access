@@ -113,6 +113,38 @@ export async function sendPaymentRequiredEmail(recipientEmail, data) {
 }
 
 /**
+ * Send account email verification email
+ */
+export async function sendEmailVerificationEmail(recipientEmail, data) {
+  return emailService.send({
+    to: recipientEmail,
+    templateName: 'emailVerification',
+    data: {
+      name: data.name || 'User',
+      verifyUrl: data.verifyUrl,
+      ...data,
+    },
+    logToAudit: true,
+  });
+}
+
+/**
+ * Send account password reset email
+ */
+export async function sendPasswordResetEmail(recipientEmail, data) {
+  return emailService.send({
+    to: recipientEmail,
+    templateName: 'passwordReset',
+    data: {
+      name: data.name || 'User',
+      resetUrl: data.resetUrl,
+      ...data,
+    },
+    logToAudit: true,
+  });
+}
+
+/**
  * Send custom email using any template
  * @param {string} to - Recipient email
  * @param {string} templateName - Template name (see TransactionalEmailService for available templates)

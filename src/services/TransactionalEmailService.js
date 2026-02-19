@@ -504,6 +504,94 @@ Best regards,
 Fafa Access Team
     `,
   },
+
+  emailVerification: {
+    subject: 'Verify your Fafa Access email',
+    htmlTemplate: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #374151; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #111827; color: white; padding: 24px; border-radius: 8px 8px 0 0; text-align: center; }
+    .content { background: #f9fafb; padding: 24px; border-radius: 0 0 8px 8px; }
+    .button { background: #2563eb; color: white; padding: 12px 20px; border-radius: 6px; text-decoration: none; display: inline-block; margin: 16px 0; }
+    .footer { color: #9ca3af; font-size: 12px; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Verify your email</h1>
+    </div>
+    <div class="content">
+      <p>Hello {{name}},</p>
+      <p>Thanks for signing up for Fafa Access. Confirm your email to activate your account.</p>
+      <a href="{{verifyUrl}}" class="button">Verify Email</a>
+      <p>If the button does not work, copy this link into your browser:</p>
+      <p>{{verifyUrl}}</p>
+      <div class="footer">
+        <p>This link expires in 24 hours. If you did not create this account, ignore this email.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+    `,
+    textTemplate: `Hello {{name}},
+
+Thanks for signing up for Fafa Access. Confirm your email to activate your account:
+{{verifyUrl}}
+
+This link expires in 24 hours. If you did not create this account, ignore this email.
+    `,
+  },
+
+  passwordReset: {
+    subject: 'Reset your Fafa Access password',
+    htmlTemplate: `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; color: #374151; }
+    .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+    .header { background: #7c2d12; color: white; padding: 24px; border-radius: 8px 8px 0 0; text-align: center; }
+    .content { background: #f9fafb; padding: 24px; border-radius: 0 0 8px 8px; }
+    .button { background: #b91c1c; color: white; padding: 12px 20px; border-radius: 6px; text-decoration: none; display: inline-block; margin: 16px 0; }
+    .footer { color: #9ca3af; font-size: 12px; margin-top: 24px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Password reset request</h1>
+    </div>
+    <div class="content">
+      <p>Hello {{name}},</p>
+      <p>We received a request to reset your password. Use the link below to choose a new one.</p>
+      <a href="{{resetUrl}}" class="button">Reset Password</a>
+      <p>If the button does not work, copy this link into your browser:</p>
+      <p>{{resetUrl}}</p>
+      <div class="footer">
+        <p>This link expires in 1 hour. If you did not request a reset, you can ignore this email.</p>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
+    `,
+    textTemplate: `Hello {{name}},
+
+We received a request to reset your password. Use this link to choose a new one:
+{{resetUrl}}
+
+This link expires in 1 hour. If you did not request a reset, ignore this email.
+    `,
+  },
 };
 
 // ============================================================================
