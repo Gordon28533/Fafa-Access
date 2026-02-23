@@ -12,6 +12,7 @@
 
 import process from 'process';
 import { EventEmitter } from 'events';
+import { Resend } from 'resend';
 import { db } from '../db/connection.js';
 import { auditLogs } from '../db/schema/index.js';
 import { logEmailSend, logEmailAudit } from './emailLogging.js';
@@ -139,45 +140,33 @@ class SendGridProvider extends EmailProvider {
 }
 
 /**
- * Resend Provider - Resend API integration
+ * Resend Provider - Resend API integration using the official Resend SDK
  * https://resend.com
  */
 class ResendProvider extends EmailProvider {
   constructor({ apiKey, fromEmail, fromName }) {
     super();
-    this.apiKey = apiKey;
     this.fromEmail = fromEmail;
     this.fromName = fromName;
+    this._client = new Resend(apiKey);
   }
 
   async send({ to, subject, html, text, from }) {
-    const url = 'https://api.resend.com/emails';
-    const body = {
+    const { data, error } = await this._client.emails.send({
       from: from || `${this.fromName || 'Fafa Access'} <${this.fromEmail}>`,
       to,
       subject,
       html: html || text,
       text: text || undefined,
       reply_to: this.fromEmail,
-    };
-
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${this.apiKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(body),
     });
 
-    if (!response.ok) {
-      const reason = await response.json().catch(() => ({ message: 'Unknown error' }));
-      throw new Error(`Resend failed (${response.status}): ${reason.message || JSON.stringify(reason)}`);
+    if (error) {
+      throw new Error(`Resend failed: ${error.message || JSON.stringify(error)}`);
     }
 
-    const result = await response.json();
     return {
-      messageId: result.id || `resend-${Date.now()}`,
+      messageId: data?.id || `resend-${Date.now()}`,
       provider: 'resend',
       status: 'sent',
       timestamp: new Date().toISOString(),
